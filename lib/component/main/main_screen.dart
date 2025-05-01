@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class ProfilePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 children: [
                   // 프로필 아이템 1 - 간단한 프로필
-                  ProfileItem(
+                  MainItem(
                     name: '철수',
                     timestamp: '29일 11 : 40 - 13 : 10',
                     statusMessage: '',
@@ -63,7 +63,7 @@ class ProfilePage extends StatelessWidget {
                   ),
 
                   // 프로필 아이템 2 - 운전중
-                  ProfileItem(
+                  MainItem(
                     name: '철수',
                     timestamp: '29일 11 : 40 - 13 : 10',
                     statusMessage: '운전중여서 통화 및 문자 x',
@@ -71,7 +71,7 @@ class ProfilePage extends StatelessWidget {
                   ),
 
                   // 프로필 아이템 3 - 영희
-                  ProfileItem(
+                  MainItem(
                     name: '영희',
                     timestamp: '',
                     statusMessage: '근무 중 입니다.',
@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                   ),
 
                   // 프로필 아이템 4 - 일런 머스크
-                  ProfileItem(
+                  MainItem(
                     name: '일런 머스크',
                     timestamp: '28일 22 : 00 - 23 : 10',
                     statusMessage: '운전 중 입니다.',
@@ -87,7 +87,7 @@ class ProfilePage extends StatelessWidget {
                   ),
 
                   // 프로필 아이템 5 - 도넛트럼프
-                  ProfileItem(
+                  MainItem(
                     name: '도넛트럼프',
                     timestamp: '',
                     statusMessage: '자리 비움',
@@ -95,7 +95,7 @@ class ProfilePage extends StatelessWidget {
                   ),
 
                   // 프로필 아이템 6 - 해외미팅자
-                  ProfileItem(
+                  MainItem(
                     name: '해외미팅자',
                     timestamp: '28일 22 : 00 - 23 : 10',
                     statusMessage: '여행 중 5/30 - 7/1',
@@ -171,13 +171,13 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class ProfileItem extends StatelessWidget {
+class MainItem extends StatelessWidget {
   final String name;
   final String statusMessage;
   final String timestamp;
   final Color statusColor;
 
-  const ProfileItem({
+  const MainItem({
     Key? key,
     required this.name,
     required this.statusMessage,
