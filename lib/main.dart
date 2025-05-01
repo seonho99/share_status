@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:share_status/component/setting/setting_screen.dart';
 
 import 'component/follow/follow_screen.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'Noto Sans',
       ),
-      home: const FollowScreen(),
+      home: const SettingsScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
