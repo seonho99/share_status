@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'dart:ui';
 
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class SettingScreen extends StatelessWidget {
+  const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
