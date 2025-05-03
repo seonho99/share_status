@@ -17,15 +17,15 @@ class NavigationWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
         color: Colors.white,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             InkWell(
               onTap: () {
                 navigationShell.goBranch(0);
               },
-              child: Image.asset(
-                'assets/icons/home.png',
-                width: 24,
-                height: 24,
+              child: Icon(
+                Icons.home,
+                size: 24,
                 color: navigationShell.currentIndex == 0 ? null : Colors.grey,
               ),
             ),
@@ -34,35 +34,10 @@ class NavigationWidget extends StatelessWidget {
               onTap: () {
                 navigationShell.goBranch(1);
               },
-              child: Image.asset(
-                'assets/icons/bookmark.png',
-                width: 24,
-                height: 24,
+              child: Icon(
+                Icons.settings,
+                size: 24,
                 color: navigationShell.currentIndex == 1 ? null : Colors.grey,
-              ),
-            ),
-            const Spacer(),
-            InkWell(
-              onTap: () {
-                navigationShell.goBranch(2);
-              },
-              child: Image.asset(
-                'assets/icons/bing.png',
-                width: 24,
-                height: 24,
-                color: navigationShell.currentIndex == 2 ? null : Colors.grey,
-              ),
-            ),
-            const SizedBox(width: 40),
-            InkWell(
-              onTap: () {
-                navigationShell.goBranch(3);
-              },
-              child: Image.asset(
-                'assets/icons/profile.png',
-                width: 24,
-                height: 24,
-                color: navigationShell.currentIndex == 3 ? null : Colors.grey,
               ),
             ),
           ],
