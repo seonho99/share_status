@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_status/component/widget/click_button.dart';
+import '../widget/input_field.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -12,13 +14,6 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.all(20.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,61 +47,70 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 40),
                 // 이메일 입력 필드
-                _buildInputField(
+                InputField(
                   label: '이메일',
-                  hintText: '이메일 을 입력해주세요.',
+                  hintText: '이메일을 입력해주세요.',
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                const SizedBox(height: 30),
-                // 비밀번호 입력 필드
-                _buildPasswordField(
-                  label: '비밀번호',
-                  hintText: '비밀번호 를 입력해주세요.',
-                  controller: _passwordController,
-                ),
                 const SizedBox(height: 20),
+                // 비밀번호 입력 필드
+                InputField(
+                  label: '비밀번호',
+                  hintText: '비밀번호를 입력해주세요.',
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 30),
                 // 비밀번호 찾기
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Text(
-                          '비밀번호를 잊으셨나요?',
-                          style: TextStyle(
-                            fontFamily: 'Noto Sans',
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    const Text(
+                      '비밀번호를 잊으셨나요?',
+                      style: TextStyle(
+                        fontFamily: 'Noto Sans',
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        // 이메일 인증 화면으로 이동
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('이메일 인증 화면으로 이동합니다.')),
+                        );
+                      },
+                      child: const Text(
+                        '이메일 인증',
+                        style: TextStyle(
+                          fontFamily: 'Noto Sans',
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(height: 6),
-                        GestureDetector(
-                          onTap: () {
-                            // 이메일 인증 화면으로 이동
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('이메일 인증 화면으로 이동합니다.')),
-                            );
-                          },
-                          child: const Text(
-                            '이메일 인증',
-                            style: TextStyle(
-                              fontFamily: 'Noto Sans',
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 40),
+
+                const SizedBox(height: 30),
                 // 로그인 버튼
-                _buildLoginButton(),
+                ClickButton(buttonText: '로그인', onPressed: () {}),
                 const SizedBox(height: 40),
                 // 회원가입
                 Row(
@@ -121,7 +125,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
                         // 회원가입 화면으로 이동
@@ -134,7 +138,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         style: TextStyle(
                           fontFamily: 'Noto Sans',
                           color: Colors.black,
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -149,147 +153,10 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _buildInputField({
-    required String label,
-    required String hintText,
-    required TextEditingController controller,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontFamily: 'Inter',
-            color: Colors.black,
-            fontSize: 17,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: const Color(0xFFCFCFCF),
-              width: 1.3,
-            ),
-          ),
-          child: TextField(
-            controller: controller,
-            keyboardType: keyboardType,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(
-                fontFamily: 'Roboto',
-                color: Color(0xFFCFCFCF),
-                fontSize: 16,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPasswordField({
-    required String label,
-    required String hintText,
-    required TextEditingController controller,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontFamily: 'Inter',
-            color: Colors.black,
-            fontSize: 17,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: const Color(0xFFCFCFCF),
-              width: 1.3,
-            ),
-          ),
-          child: TextField(
-            controller: controller,
-            obscureText: _obscurePassword,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(
-                fontFamily: 'Roboto',
-                color: Color(0xFFCFCFCF),
-                fontSize: 16,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              border: InputBorder.none,
-              suffixIcon: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-                child: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginButton() {
-    return GestureDetector(
-      onTap: () {
-        // 로그인 처리
-        if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('이메일과 비밀번호를 모두 입력해주세요.')),
-          );
-          return;
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('로그인 처리 중...')),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        height: 56,
-        decoration: BoxDecoration(
-          color: const Color(0xFF228B22), // ForestGreen 색상
-          borderRadius: BorderRadius.circular(10),
-        ),
-        alignment: Alignment.center,
-        child: const Text(
-          '로그인',
-          style: TextStyle(
-            fontFamily: 'Noto Sans',
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

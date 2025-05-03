@@ -6,7 +6,7 @@ import '../../component/auth/sign_in_screen.dart';
 import '../../component/auth/sign_up_screen.dart';
 import '../../component/follow/follow_screen.dart';
 import '../../component/main/main_screen.dart';
-import '../../component/navigation_widget.dart';
+import '../../component/widget/navigation_widget.dart';
 import '../../component/setting/setting_screen.dart';
 import '../../component/splash/splash_screen.dart';
 import 'routes.dart';
