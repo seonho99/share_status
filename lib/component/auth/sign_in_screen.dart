@@ -100,7 +100,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
               const SizedBox(height: 30),
               // 로그인 버튼
-              ClickButton(buttonText: '로그인', onPressed: () {}),
+              ClickButton(buttonText: '로그인', onPressed: () {
+                context.go(Routes.main);
+              }),
               const SizedBox(height: 40),
               // 회원가입
               Row(
@@ -118,7 +120,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(width: 10),
                   GestureDetector(
                     onTap: () {
-                      context.go(Routes.signUp);
+                      context.go('/sign_in/sign_up');
                     },
                     child: const Text(
                       '회원가입',

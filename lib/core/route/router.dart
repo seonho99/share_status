@@ -14,25 +14,26 @@ import 'routes.dart';
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final router = GoRouter(
-  initialLocation: Routes.splash,
+  navigatorKey: _rootNavigatorKey,
+  initialLocation: '/',
   routes: [
     GoRoute(
-      path: Routes.splash,
-      builder: (context, state) {
-        return SplashScreen();
-      },
+      path: '/',
+      builder: (context, state) => SplashScreen(),
     ),
     GoRoute(
       path: Routes.signIn,
       builder: (context, state) {
         return SignInScreen();
       },
-    ),
-    GoRoute(
-      path: Routes.signUp,
-      builder: (context, state) {
-        return SignUpScreen();
-      },
+      routes: [
+        GoRoute(
+          path: Routes.signUp,
+          builder: (context, state) {
+            return SignUpScreen();
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: Routes.password,
