@@ -29,13 +29,13 @@ final router = GoRouter(
       },
     ),
     GoRoute(
-      path: Routes.signIn,
+      path: Routes.signUp,
       builder: (context, state) {
         return SignUpScreen();
       },
     ),
     GoRoute(
-      path: Routes.signIn,
+      path: Routes.password,
       builder: (context, state) {
         return PasswordResetScreen();
       },

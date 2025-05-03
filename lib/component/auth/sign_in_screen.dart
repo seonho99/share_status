@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:share_status/component/widget/click_button.dart';
+import '../../core/route/routes.dart';
 import '../widget/input_field.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -19,15 +21,6 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        toolbarHeight: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -90,10 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        // 이메일 인증 화면으로 이동
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('이메일 인증 화면으로 이동합니다.')),
-                        );
+                        context.go(Routes.password);
                       },
                       child: const Text(
                         '이메일 인증',
@@ -128,10 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        // 회원가입 화면으로 이동
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('회원가입 화면으로 이동합니다.')),
-                        );
+                        context.go(Routes.signUp);
                       },
                       child: const Text(
                         '회원가입',
