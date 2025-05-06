@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widget/main_item.dart';
+import '../bottom_sheet/bottom_sheet_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -28,7 +29,7 @@ class MainScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: MainItem(
                 name: '철수',
-                timestamp: '29일 11 : 40 - 13 : 10',
+                statusTime: '29일 11 : 40 - 13 : 10',
                 statusMessage: '',
                 statusColor: Colors.transparent,
               ),
@@ -63,50 +64,60 @@ class MainScreen extends StatelessWidget {
 
             // 프로필 목록
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
 
-                  MainItem(
-                    name: '철수',
-                    timestamp: '29일 11 : 40',
-                    statusMessage: '운전중여서 통화 및 문자 x',
-                    statusColor: Colors.red,
-                  ),
+                    GestureDetector(
+                      onTap: (){
+                        showBottomSheet(context: context,
+                            builder: (context){
+                          return BottomSheetScreen();
+                            });
+                      },
+                      child: MainItem(
+                        name: '철수',
+                        statusTime: '29일 11 : 40',
+                        statusColor: Colors.red,
+                        statusMessage: '운전중여서 통화 및 문자 x',
+                      ),
+                    ),
 
-                  // 프로필 아이템 3 - 영희
-                  MainItem(
-                    name: '영희',
-                    timestamp: '',
-                    statusMessage: '근무 중 입니다.',
-                    statusColor: Color(0xFF41CC3E), // 녹색
-                  ),
+                    // 프로필 아이템 3 - 영희
+                    MainItem(
+                      name: '영희',
+                      statusTime: '',
+                      statusMessage: '근무 중 입니다.',
+                      statusColor: Color(0xFF41CC3E), // 녹색
+                    ),
 
-                  // 프로필 아이템 4 - 일런 머스크
-                  MainItem(
-                    name: '일런 머스크',
-                    timestamp: '28일 22 : 00',
-                    statusMessage: '운전 중 입니다.',
-                    statusColor: Color(0xFFF4F900), // 노란색
-                  ),
+                    // 프로필 아이템 4 - 일런 머스크
+                    MainItem(
+                      name: '일런 머스크',
+                      statusTime: '28일 22 : 00',
+                      statusMessage: '운전 중 입니다.',
+                      statusColor: Color(0xFFF4F900), // 노란색
+                    ),
 
-                  // 프로필 아이템 5 - 도넛트럼프
-                  MainItem(
-                    name: '도넛트럼프',
-                    timestamp: '',
-                    statusMessage: '자리 비움',
-                    statusColor: Color(0xFFD9D9D9), // 회색
-                  ),
+                    // 프로필 아이템 5 - 도넛트럼프
+                    MainItem(
+                      name: '도넛트럼프',
+                      statusTime: '',
+                      statusMessage: '자리 비움',
+                      statusColor: Color(0xFFD9D9D9), // 회색
+                    ),
 
-                  // 프로필 아이템 6 - 해외미팅자
-                  MainItem(
-                    name: '해외미팅자',
-                    timestamp: '28일 22 : 00',
-                    statusMessage: '여행 중 5/30 - 7/1',
-                    statusColor: Color(0xFFF9000F), // 빨간색
-                  ),
+                    // 프로필 아이템 6 - 해외미팅자
+                    MainItem(
+                      name: '해외미팅자',
+                      statusTime: '28일 22 : 00',
+                      statusMessage: '여행 중 5/30 - 7/1',
+                      statusColor: Color(0xFFF9000F), // 빨간색
+                    ),
 
-                ],
+                  ],
+                ),
               ),
             ),
           ],

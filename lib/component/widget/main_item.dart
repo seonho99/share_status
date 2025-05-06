@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class MainItem extends StatelessWidget {
   final String name;
   final String statusMessage;
-  final String timestamp;
+  final String statusTime;
   final Color statusColor;
 
   const MainItem({
     super.key,
     required this.name,
     required this.statusMessage,
-    required this.timestamp,
+    required this.statusTime,
     required this.statusColor,
   });
 
@@ -47,7 +47,7 @@ class MainItem extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(width: 20),
-                Text(timestamp, style: TextStyle(fontSize: 17)),
+                Text(statusTime, style: TextStyle(fontSize: 17)),
               ],
             ),
             Row(

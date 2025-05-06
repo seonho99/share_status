@@ -1,14 +1,20 @@
-part 'rating.freezed.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'enum/color_status.dart';
+
+part 'status.freezed.dart';
 
 @freezed
-class Rating with _$Rating {
-  final String title;
-  final String actionName;
-  final void Function(int) onChange;
+class Status with _$Status {
+  final String name;
+  final DateTime statusTime;
+  final FilterColor colorStatus;
+  final String statusMessage;
 
-  const Rating({
-    required this.title,
-    required this.actionName,
-    required this.onChange,
+  const Status({
+    required this.name,
+    required this.statusTime,
+    required this.colorStatus,
+    required this.statusMessage,
   });
 }
