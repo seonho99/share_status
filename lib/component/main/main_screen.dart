@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../widget/main_item.dart';
 import '../bottom_sheet/bottom_sheet_screen.dart';
+import '../bottom_sheet/bottom_sheet_view_model.dart';
+import '../widget/main_item.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+
   const MainScreen({super.key});
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,12 +22,12 @@ class MainScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 20,top: 10,),
+              padding: const EdgeInsets.only(right: 20, top: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text('동료 추가',style: TextStyle(),),
-                  SizedBox(width: 10,),
+                  Text('동료 추가', style: TextStyle()),
+                  SizedBox(width: 10),
                   Icon(Icons.search, size: 24),
                 ],
               ),
@@ -27,11 +35,33 @@ class MainScreen extends StatelessWidget {
 
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: MainItem(
-                name: '철수',
-                statusTime: '29일 11 : 40 - 13 : 10',
-                statusMessage: '',
-                statusColor: Colors.transparent,
+              child: GestureDetector(
+                onTap: () {
+                  showBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.white,
+                    builder:
+                        (context) =>
+                        ChangeNotifierProvider(
+                          create: (_) => BottomSheetViewModel(),
+                          child: BottomSheetScreen(
+                            onSaved: (message, time, color) {
+                              setState(() {
+                                _statusMessage = message;
+                                _statusTime = time;
+                                _statusColor = color;
+                              });
+                            },
+                          ),
+                        ),
+                  );
+                },
+                child: MainItem(
+                  name:,
+                  statusTime:,
+                  statusMessage:,
+                  statusColor:,
+                ),
               ),
             ),
             Padding(
@@ -68,20 +98,11 @@ class MainScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-
-                    GestureDetector(
-                      onTap: (){
-                        showBottomSheet(context: context,
-                            builder: (context){
-                          return BottomSheetScreen();
-                            });
-                      },
-                      child: MainItem(
-                        name: '철수',
-                        statusTime: '29일 11 : 40',
-                        statusColor: Colors.red,
-                        statusMessage: '운전중여서 통화 및 문자 x',
-                      ),
+                    MainItem(
+                      name: '철수',
+                      statusTime: '29일 11 : 40',
+                      statusColor: Colors.red,
+                      statusMessage: '운전중여서 통화 및 문자 x',
                     ),
 
                     // 프로필 아이템 3 - 영희
@@ -115,7 +136,6 @@ class MainScreen extends StatelessWidget {
                       statusMessage: '여행 중 5/30 - 7/1',
                       statusColor: Color(0xFFF9000F), // 빨간색
                     ),
-
                   ],
                 ),
               ),
@@ -126,4 +146,3 @@ class MainScreen extends StatelessWidget {
     );
   }
 }
-

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "312618444576",
+    "project_id": "share-status-5fa14",
+    "storage_bucket": "share-status-5fa14.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312618444576:android:231126c25b7fe220379945",
+        "android_client_info": {
+          "package_name": "seonho.com.share_status.share_status"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwd8a7DrAhOC5kT4kxA3jk3pcNMREluAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

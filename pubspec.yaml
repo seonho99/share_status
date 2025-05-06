@@ -39,6 +39,8 @@ dependencies:
   json_annotation: ^4.9.0
   intl: ^0.20.2
   provider: ^6.1.5
+  firebase_core: ^3.2.0
+
 
 dev_dependencies:
   flutter_test:
