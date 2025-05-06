@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ClickButton extends StatelessWidget {
   final String buttonText;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const ClickButton({
     super.key,

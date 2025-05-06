@@ -47,21 +47,21 @@ class _MainScreenState extends State<MainScreen> {
                           child: BottomSheetScreen(
                             onSaved: (message, time, color) {
                               setState(() {
-                                _statusMessage = message;
-                                _statusTime = time;
-                                _statusColor = color;
+                                // _statusMessage = message;
+                                // _statusTime = time;
+                                // _statusColor = color;
                               });
                             },
                           ),
                         ),
                   );
                 },
-                child: MainItem(
-                  name:,
-                  statusTime:,
-                  statusMessage:,
-                  statusColor:,
-                ),
+                // child: MainItem(
+                  // name:,
+                  // statusTime:,
+                  // statusMessage:,
+                  // statusColor:,
+                // ),
               ),
             ),
             Padding(

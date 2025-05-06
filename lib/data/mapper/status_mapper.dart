@@ -4,7 +4,7 @@ import '../../domain/model/status.dart';
 import '../dto/status_dto.dart';
 
 extension StatusMapper on StatusDto {
-  Status toRecipe() {
+  Status toStatus() {
     return Status(
       name: name ?? '제목 없음',
       statusTime: statusTime ?? DateTime.now(),
