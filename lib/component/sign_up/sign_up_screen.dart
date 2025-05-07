@@ -124,6 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         context.go(Routes.signIn);
                       },
                       onError: _showError,
+
                     );
                   },
                 )
