@@ -23,6 +23,7 @@ class SignUpViewModel extends ChangeNotifier {
   bool _isLoading = false;
 
   SignUpState get state => _state;
+
   bool get isLoading => _isLoading;
 
   void onNicknameChanged(String value) {
@@ -46,20 +47,7 @@ class SignUpViewModel extends ChangeNotifier {
   }
 
   void onIdChanged(String value) {
-    _state = _state.copyWith(id: value, isIdAvailable: false);
-    notifyListeners();
-  }
-
-  Future<void> checkId() async {
-    _state = _state.copyWith(isCheckingId: true);
-    notifyListeners();
-
-    final isAvailable = await _userUseCase.callId(_state.id);
-
-    _state = _state.copyWith(
-      isIdAvailable: isAvailable,
-      isCheckingId: false,
-    );
+    _state = _state.copyWith(id: value);
     notifyListeners();
   }
 
@@ -68,8 +56,20 @@ class SignUpViewModel extends ChangeNotifier {
     required VoidCallback onSuccess,
     required void Function(String error) onError,
   }) async {
-    if (!state.isFormValid) {
-      onError('입력값을 다시 확인해주세요.');
+    if (!state.isNicknameValid) {
+      onError('닉네임은 5자 이하로 입력해주세요.');
+      return;
+    }
+    if (!state.isEmailValid) {
+      onError('올바른 이메일 형식을 입력해주세요.');
+      return;
+    }
+    if (!state.isPasswordValid) {
+      onError('비밀번호는 8자 이상이어야 합니다.');
+      return;
+    }
+    if (!state.isConfirmPasswordValid) {
+      onError('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -77,6 +77,14 @@ class SignUpViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final isAvailable = await _userUseCase.callId(state.id);
+      if (!isAvailable) {
+        _isLoading = false;
+        notifyListeners();
+        onError('이미 사용 중인 아이디입니다.');
+        return;
+      }
+
       final uid = await _signUpUseCase.call(
         email: state.email,
         password: state.password,
@@ -91,13 +99,13 @@ class SignUpViewModel extends ChangeNotifier {
       );
 
       await _userUseCase.call(user);
-
       onSuccess();
     } catch (e) {
-      onError(e.toString());
+      onError('회원가입 중 오류가 발생했습니다.\n${e.toString()}');
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
+
 }

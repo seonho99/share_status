@@ -195,7 +195,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   label: '닉네임',
                   hintText: '닉네임을 입력해주세요.',
                   controller: _nicknameController,
-
+                  onChanged: viewModel.onEmailChanged,
                 ),
                 const SizedBox(height: 20),
                 InputField(
@@ -203,6 +203,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   hintText: '이메일을 입력해주세요.',
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
+                  onChanged: viewModel.onPasswordChanged,
                 ),
                 const SizedBox(height: 20),
                 InputField(
@@ -210,12 +211,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   hintText: '비밀번호를 입력해주세요.',
                   controller: _passwordController,
                   obscureText: _obscurePassword,
+                  onChanged: viewModel.onPasswordChanged,
                 ),
                 const SizedBox(height: 20),
                 InputField(
                   label: '비밀번호 재확인',
                   hintText: '비밀번호를 다시 입력해주세요.',
                   controller: _confirmPasswordController,
+                  onChanged: viewModel.onConfirmPasswordChanged,
                   obscureText: _obscurePassword,
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -233,6 +236,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   label: 'ID 입력',
                   hintText: 'ID를 입력해주세요.',
                   controller: _idController,
+                  onChanged: viewModel.onIdChanged,
                 ),
                 Row(
                   children: [
@@ -254,11 +258,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       return;
                     }
 
-                    if (_passwordController.text != _confirmPasswordController.text) {
-                      _showError('비밀번호가 일치하지 않습니다.');
-                      return;
-                    }
-
                     viewModel.signUp(
                       imageUrl: _defaultImageUrl,
                       onSuccess: () {
@@ -268,6 +267,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     );
                   },
                 )
+
               ],
             ),
           ),

@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-
 part 'sign_up_state.freezed.dart';
 
 @freezed
@@ -27,8 +26,10 @@ class SignUpState with _$SignUpState {
 extension SignUpStateX on SignUpState {
   // 유효성 여부
   bool get isNicknameValid => nickname.length <= 5;
-  bool get isEmailValid =>
-      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  bool get isEmailValid {
+    final regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return regex.hasMatch(email);
+  }
   bool get isPasswordValid => password.length >= 8;
   bool get isConfirmPasswordValid => confirmPassword == password;
   bool get isIdValid => id.isNotEmpty && isIdAvailable;
