@@ -4,6 +4,7 @@ import '../dto/follow_request_dto.dart';
 extension FollowRequestMapper on FollowRequestDto {
   FollowRequest toDomain() {
     return FollowRequest(
+      id: id,
       fromUserId: fromUserId,
       toUserId: toUserId,
       toUserName: toUserName,
@@ -16,6 +17,7 @@ extension FollowRequestMapper on FollowRequestDto {
 extension FollowRequestDomainMapper on FollowRequest {
   FollowRequestDto toDto() {
     return FollowRequestDto(
+      id: id,
       fromUserId: fromUserId,
       toUserId: toUserId,
       toUserName: toUserName,

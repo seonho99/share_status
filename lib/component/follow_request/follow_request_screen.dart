@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../follow/follow_request_state.dart';
-import '../follow/follow_request_view_model.dart';
+import 'follow_request_state.dart';
+import 'follow_request_view_model.dart';
+
+
 
 class FollowRequestScreen extends StatefulWidget {
   const FollowRequestScreen({super.key});

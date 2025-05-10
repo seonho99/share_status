@@ -9,7 +9,7 @@ class FollowRequestState with _$FollowRequestState {
   const FollowRequestState({
     required this.followRequests,
     required this.isLoading,
-    required this.errorMessage,
+    this.errorMessage,
     required this.processingRequests,
   });
 
@@ -23,7 +23,7 @@ class FollowRequestState with _$FollowRequestState {
   final List<FollowRequest> followRequests;
   final bool isLoading;
   final String? errorMessage;
-  final Set<String> processingRequests; // 현재 처리 중인 요청 ID들
+  final Set<String> processingRequests; 
 }
 
 extension FollowRequestStateX on FollowRequestState {
