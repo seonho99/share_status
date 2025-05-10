@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../domain/model/follow_request.dart';
 import 'follow_request_state.dart';
 import 'follow_request_view_model.dart';
-
-
 
 class FollowRequestScreen extends StatefulWidget {
   const FollowRequestScreen({super.key});
@@ -116,7 +115,7 @@ class _FollowRequestScreenState extends State<FollowRequestScreen> {
     );
   }
 
-  Widget _buildFollowRequestItem(request) {
+  Widget _buildFollowRequestItem(FollowRequest request) {
     final viewModel = context.read<FollowRequestViewModel>();
 
     return Row(
@@ -260,10 +259,22 @@ class _FollowRequestScreenState extends State<FollowRequestScreen> {
     );
   }
 
-  void _handleAcceptRequest(request) async {
+  void _handleAcceptRequest(FollowRequest request) async {
     final viewModel = context.read<FollowRequestViewModel>();
+
+    // request.id가 null인 경우 처리
+    if (request.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('요청 정보가 올바르지 않습니다.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     await viewModel.acceptFollowRequest(
-      requestId: request.id, // 이 필드가 필요합니다
+      requestId: request.id!,
       fromUserId: request.fromUserId,
       onSuccess: () {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -284,10 +295,22 @@ class _FollowRequestScreenState extends State<FollowRequestScreen> {
     );
   }
 
-  void _handleRejectRequest(request) async {
+  void _handleRejectRequest(FollowRequest request) async {
     final viewModel = context.read<FollowRequestViewModel>();
+
+    // request.id가 null인 경우 처리
+    if (request.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('요청 정보가 올바르지 않습니다.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     await viewModel.rejectFollowRequest(
-      requestId: request.id, // 이 필드가 필요합니다
+      requestId: request.id!,
       onSuccess: () {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
