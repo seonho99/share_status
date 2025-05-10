@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:share_status/component/sign_up/sign_up_view_model.dart';
 
 import '../../../component/widget/click_button.dart';
 import '../../../component/widget/input_field.dart';
 import '../../../core/route/routes.dart';
+import 'sign_up_view_model.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

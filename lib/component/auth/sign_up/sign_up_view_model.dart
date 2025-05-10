@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../domain/model/user_model.dart';
-import '../../domain/usecase/sign_up_usecase.dart';
-import '../../domain/usecase/user_usecase.dart';
+
+import '../../../domain/model/user_model.dart';
+import '../../../domain/usecase/sign_up_usecase.dart';
+import '../../../domain/usecase/user_usecase.dart';
 import 'sign_up_state.dart';
 
 class SignUpViewModel extends ChangeNotifier {

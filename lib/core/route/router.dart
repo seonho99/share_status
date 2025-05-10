@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../component/auth/password_reset_screen.dart';
-import '../../component/auth/sign_in_screen.dart';
-import '../../component/sign_up/sign_up_screen.dart';
+import '../../component/auth/sign_in/sign_in_screen.dart';
+import '../../component/auth/sign_up/sign_up_screen.dart';
 import '../../component/follow/follow_screen.dart';
 import '../../component/main/main_screen.dart';
 import '../../component/widget/navigation_widget.dart';
