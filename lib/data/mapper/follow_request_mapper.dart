@@ -1,3 +1,4 @@
+import '../../domain/model/follow_request.dart';
 import '../dto/follow_request_dto.dart';
 
 extension FollowRequestMapper on FollowRequestDto {

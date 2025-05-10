@@ -1,3 +1,6 @@
+import 'package:share_status/data/mapper/follow_request_mapper.dart';
+
+import '../../domain/model/follow_request.dart';
 import '../../domain/model/user_model.dart';
 import '../../domain/repository/firebase_repository.dart';
 import '../data_source/firebase_data_source.dart';
