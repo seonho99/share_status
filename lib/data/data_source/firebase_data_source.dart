@@ -1,3 +1,4 @@
+import '../dto/follow_request_dto.dart';
 import '../dto/user_dto.dart';
 
 abstract interface class FirebaseDataSource {
