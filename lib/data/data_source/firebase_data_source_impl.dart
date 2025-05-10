@@ -118,40 +118,26 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       // 현재 사용자 UID 제외하고 검색
       final currentUserId = _auth.currentUser?.uid;
 
-      // ID 또는 닉네임으로 검색 (부분 일치)
+      // ID로만 검색 (부분 일치)
       final querySnapshot =
-          await _users
-              .where('id', isGreaterThanOrEqualTo: query)
-              .where('id', isLessThanOrEqualTo: '$query\uf8ff')
-              .get();
+      await _users
+          .where('id', isGreaterThanOrEqualTo: query)
+          .where('id', isLessThanOrEqualTo: '$query\uf8ff')
+          .get();
 
-      final nicknameQuerySnapshot =
-          await _users
-              .where('nickname', isGreaterThanOrEqualTo: query)
-              .where('nickname', isLessThanOrEqualTo: '$query\uf8ff')
-              .get();
-
-      // 결과 합치기 및 중복 제거
-      final Set<Map<String, dynamic>> results = {};
-
+      // 결과에서 현재 사용자 제외
+      final results = <Map<String, dynamic>>[];
       for (final doc in querySnapshot.docs) {
         if (doc.id != currentUserId) {
-          results.add({...doc.data(), 'id': doc.id});
+          results.add({...doc.data(), 'uid': doc.id});
         }
       }
 
-      for (final doc in nicknameQuerySnapshot.docs) {
-        if (doc.id != currentUserId) {
-          results.add({...doc.data(), 'id': doc.id});
-        }
-      }
-
-      return results.toList();
+      return results;
     } catch (e) {
       throw Exception('사용자 검색 중 오류가 발생했습니다: ${e.toString()}');
     }
   }
-
   // 팔로우 요청 보내기
   @override
   Future<void> sendFollowRequest(FollowRequestDto request) async {
