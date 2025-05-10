@@ -4,6 +4,7 @@ part 'follow_request_dto.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FollowRequestDto {
+  final String? id;
   final String fromUserId;
   final String toUserId;
   final String toUserName;
@@ -11,6 +12,7 @@ class FollowRequestDto {
   final DateTime createdAt;
 
   FollowRequestDto({
+    this.id,
     required this.fromUserId,
     required this.toUserId,
     required this.toUserName,
