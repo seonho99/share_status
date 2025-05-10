@@ -4,12 +4,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'component/auth/password_reset/password_reset_view_model.dart';
 import 'component/auth/sign_up/sign_up_view_model.dart';
 import 'component/auth/sign_in/sign_in_view_model.dart';
+import 'component/follow/follow_view_model.dart';
 import 'data/data_source/firebase_data_source_impl.dart';
 import 'data/repository/firebase_repository_impl.dart';
 import 'domain/usecase/sign_up_usecase.dart';
 import 'domain/usecase/sign_in_use_case.dart';
 import 'domain/usecase/password_reset_usecase.dart';
 import 'domain/usecase/user_usecase.dart';
+import 'domain/usecase/follow_usecase.dart';
 import 'firebase_options.dart';
 
 import 'component/bottom_sheet/bottom_sheet_view_model.dart';
@@ -41,6 +43,11 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => PasswordResetViewModel(
             PasswordResetUseCase(repository),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FollowViewModel(
+            FollowUseCase(repository),
           ),
         ),
       ],

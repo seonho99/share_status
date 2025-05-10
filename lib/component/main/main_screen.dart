@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../bottom_sheet/bottom_sheet_screen.dart';
@@ -23,13 +24,18 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 20, top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text('동료 추가', style: TextStyle()),
-                  SizedBox(width: 10),
-                  Icon(Icons.search, size: 24),
-                ],
+              child: GestureDetector(
+                onTap: (){
+                  context.go('/main/follow');
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text('동료 추가', style: TextStyle()),
+                    SizedBox(width: 10),
+                    Icon(Icons.search, size: 24),
+                  ],
+                ),
               ),
             ),
 
