@@ -22,7 +22,7 @@ void main() async {
           create:
               (_) => SignUpViewModel(
                 SignUpUseCase(),
-                UserUseCase(FirestoreRepositoryImpl(FirestoreDataSourceImpl())),
+                UserUseCase(FirebaseRepositoryImpl(FirebaseDataSourceImpl())),
               ),
         ),
       ],

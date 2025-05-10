@@ -1,5 +1,5 @@
 import '../../domain/model/user_model.dart';
-import '../../domain/repository/firesbase_repository.dart';
+import '../../domain/repository/firebase_repository.dart';
 import '../data_source/firebase_data_source.dart';
 import '../mapper/user_mapper.dart';
 
