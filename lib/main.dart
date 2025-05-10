@@ -5,6 +5,7 @@ import 'component/auth/password_reset/password_reset_view_model.dart';
 import 'component/auth/sign_up/sign_up_view_model.dart';
 import 'component/auth/sign_in/sign_in_view_model.dart';
 import 'component/follow/follow_view_model.dart';
+import 'component/follow_request/follow_request_view_model.dart';
 import 'data/data_source/firebase_data_source_impl.dart';
 import 'data/repository/firebase_repository_impl.dart';
 import 'domain/usecase/sign_up_usecase.dart';
@@ -47,6 +48,11 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => FollowViewModel(
+            FollowUseCase(repository),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FollowRequestViewModel(
             FollowUseCase(repository),
           ),
         ),
