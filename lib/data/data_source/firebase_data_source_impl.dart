@@ -171,18 +171,18 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
   // 받은 팔로우 요청 목록 조회
   @override
-  Future<List<FollowRequestDto>> getReceivedFollowRequests(
-    String userId,
-  ) async {
+  Future<List<FollowRequestDto>> getReceivedFollowRequests(String userId) async {
     try {
-      final querySnapshot =
-          await _followRequests
-              .where('toUserId', isEqualTo: userId)
-              .orderBy('createdAt', descending: true)
-              .get();
+      final querySnapshot = await _followRequests
+          .where('toUserId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
 
       return querySnapshot.docs
-          .map((doc) => FollowRequestDto.fromJson(doc.data()))
+          .map((doc) => FollowRequestDto.fromJson({
+        ...doc.data(),
+        'id': doc.id, // 문서 ID 추가
+      }))
           .toList();
     } catch (e) {
       throw Exception('받은 팔로우 요청 조회 중 오류가 발생했습니다: ${e.toString()}');
