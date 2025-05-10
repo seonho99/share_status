@@ -18,4 +18,31 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   Future<bool> isIdAvailable(String id) {
     return _dataSource.checkIdExists(id);
   }
+
+  @override
+  Future<String> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) {
+    return _dataSource.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  @override
+  Future<void> signOut() {
+    return _dataSource.signOut();
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) {
+    return _dataSource.sendPasswordResetEmail(email);
+  }
+
+  @override
+  String? get currentUserId => _dataSource.currentUserId;
+
+  @override
+  bool get isSignedIn => _dataSource.isSignedIn;
 }
