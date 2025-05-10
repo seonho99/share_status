@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'component/auth/sign_up/sign_up_view_model.dart';
+import 'component/auth/sign_in/sign_in_view_model.dart';
 import 'data/data_source/firebase_data_source_impl.dart';
 import 'data/repository/firebase_repository_impl.dart';
 import 'domain/usecase/sign_up_usecase.dart';
+import 'domain/usecase/sign_in_use_case.dart';
 import 'domain/usecase/user_usecase.dart';
 import 'firebase_options.dart';
 
@@ -14,16 +16,25 @@ import 'core/route/router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // 공통 인스턴스들
+  final dataSource = FirebaseDataSourceImpl();
+  final repository = FirebaseRepositoryImpl(dataSource);
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BottomSheetViewModel()),
         ChangeNotifierProvider(
-          create:
-              (_) => SignUpViewModel(
-                SignUpUseCase(),
-                UserUseCase(FirebaseRepositoryImpl(FirebaseDataSourceImpl())),
-              ),
+          create: (_) => SignUpViewModel(
+            SignUpUseCase(),
+            UserUseCase(repository),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SignInViewModel(
+            SignInUseCase(repository),
+          ),
         ),
       ],
       child: const MyApp(),
