@@ -5,6 +5,7 @@ import '../../component/auth/password_reset/password_reset_screen.dart';
 import '../../component/auth/sign_in/sign_in_screen.dart';
 import '../../component/auth/sign_up/sign_up_screen.dart';
 import '../../component/follow/follow_screen.dart';
+import '../../component/follow_request/follow_request_screen.dart';
 import '../../component/main/main_screen.dart';
 import '../../component/widget/navigation_widget.dart';
 import '../../component/setting/setting_screen.dart';
@@ -17,10 +18,7 @@ final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => SplashScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => SplashScreen()),
     GoRoute(
       path: Routes.signIn,
       builder: (context, state) {
@@ -39,6 +37,13 @@ final router = GoRouter(
       path: Routes.password,
       builder: (context, state) {
         return PasswordResetScreen();
+      },
+    ),
+    // 팔로우 요청 화면 라우트 추가
+    GoRoute(
+      path: Routes.followRequest,
+      builder: (context, state) {
+        return FollowRequestScreen();
       },
     ),
     StatefulShellRoute.indexedStack(
