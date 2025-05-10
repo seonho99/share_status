@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../core/result.dart';
+import '../../domain/model/user_model.dart';
 import '../../domain/usecase/follow_usecase.dart';
 import 'follow_state.dart';
 
