@@ -1,12 +1,12 @@
 import '../../domain/model/user_model.dart';
-import '../../domain/repository/firestore_repository.dart';
-import '../data_source/firestore_data_source.dart';
+import '../../domain/repository/firesbase_repository.dart';
+import '../data_source/firebase_data_source.dart';
 import '../mapper/user_mapper.dart';
 
-class FirestoreRepositoryImpl implements FirestoreRepository {
-  final FirestoreDataSource _dataSource;
+class FirebaseRepositoryImpl implements FirebaseRepository {
+  final FirebaseDataSource _dataSource;
 
-  FirestoreRepositoryImpl(this._dataSource);
+  FirebaseRepositoryImpl(this._dataSource);
 
   @override
   Future<void> createUser(UserModel user) {

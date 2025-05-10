@@ -1,5 +1,5 @@
 import '../model/user_model.dart';
-import '../repository/firestore_repository.dart';
+import '../repository/firesbase_repository.dart';
 
 class UserUseCase {
   final FirestoreRepository _repository;

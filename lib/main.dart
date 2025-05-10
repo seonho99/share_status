@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'component/sign_up/sign_up_view_model.dart';
 import 'data/data_source/firebase_data_source_impl.dart';
-import 'data/repository/firestore_repository_impl.dart';
+import 'data/repository/firebase_repository_impl.dart';
 import 'domain/usecase/sign_up_usecase.dart';
 import 'domain/usecase/user_usecase.dart';
 import 'firebase_options.dart';
