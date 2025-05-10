@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:share_status/component/widget/click_button.dart';
 import 'package:share_status/core/route/routes.dart';
 
-import '../widget/input_field.dart';
+import '../../widget/input_field.dart';
 
 class PasswordResetScreen extends StatefulWidget {
   PasswordResetScreen({super.key});
