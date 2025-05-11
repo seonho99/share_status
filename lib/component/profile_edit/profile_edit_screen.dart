@@ -50,6 +50,21 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           });
         }
 
+        // 에러 메시지 snackbar 표시
+        if (state.errorMessage != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage!),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+            // 에러 메시지를 한 번 표시한 후 초기화
+            viewModel.onNicknameChanged(state.nickname);
+          });
+        }
+
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -79,6 +94,30 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   const SizedBox(height: 20),
                   // 프로필 이미지
                   _buildProfileImage(state, viewModel),
+                  if (state.isUploading)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            '이미지 업로드 중...',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   const SizedBox(height: 40),
                   // 닉네임 입력 필드
                   InputField(
