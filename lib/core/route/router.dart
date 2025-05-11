@@ -66,13 +66,17 @@ final router = GoRouter(
                     return FollowRequestScreen();
                   },
                 ),
-                GoRoute(
-                  path: Routes.set,
-                  builder: (context, state) {
-                    return SettingScreen();
-                  },
-                ),
               ],
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/settings',
+              builder: (context, state) {
+                return SettingScreen();
+              },
             ),
           ],
         ),

@@ -4,7 +4,7 @@ abstract class Routes {
   static const String password = '/password';
 
   static const String main = '/main';
-  static const String set = 'set';
+  static const String settings = '/settings';
   static const String follow = 'follow';
   static const String followRequest = 'follow_request';
 }

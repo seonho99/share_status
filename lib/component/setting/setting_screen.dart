@@ -69,7 +69,6 @@ class SettingScreen extends StatelessWidget {
                 ),
               ),
             ),
-            _buildBottomTabBar(),
           ],
         ),
       ),
@@ -111,68 +110,6 @@ class SettingScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildBottomTabBar() {
-    return Container(
-      height: 83,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Color(0x4D000000),
-            width: 0.33,
-          ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildTabItem(icon: Icons.home, label: 'Tab', isSelected: true),
-              _buildTabItem(icon: Icons.favorite_outline, label: 'Tab'),
-              _buildTabItem(icon: Icons.add_circle_outline, label: 'Tab'),
-              _buildTabItem(icon: Icons.notifications_none_outlined, label: 'Tab'),
-              _buildTabItem(icon: Icons.person_outline, label: 'Tab'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTabItem({
-    required IconData icon,
-    required String label,
-    bool isSelected = false
-  }) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: isSelected ? const Color(0xFF007AFF) : const Color(0xFF999999),
-          size: 24,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? const Color(0xFF007AFF) : const Color(0xFF999999),
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
     );
   }
 }
