@@ -40,12 +40,7 @@ final router = GoRouter(
       },
     ),
     // 팔로우 요청 화면 라우트 추가
-    GoRoute(
-      path: Routes.followRequest,
-      builder: (context, state) {
-        return FollowRequestScreen();
-      },
-    ),
+
     StatefulShellRoute.indexedStack(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state, navigationShell) {
@@ -64,6 +59,12 @@ final router = GoRouter(
                   path: Routes.follow,
                   builder: (context, state) {
                     return FollowScreen();
+                  },
+                ),
+                GoRoute(
+                  path: Routes.followRequest,
+                  builder: (context, state) {
+                    return FollowRequestScreen();
                   },
                 ),
                 GoRoute(

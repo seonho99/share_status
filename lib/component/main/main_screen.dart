@@ -7,7 +7,6 @@ import '../bottom_sheet/bottom_sheet_view_model.dart';
 import '../widget/main_item.dart';
 
 class MainScreen extends StatefulWidget {
-
   const MainScreen({super.key});
 
   @override
@@ -24,18 +23,24 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 20, top: 10),
-              child: GestureDetector(
-                onTap: (){
-                  context.go('/main/follow');
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('동료 추가', style: TextStyle()),
-                    SizedBox(width: 10),
-                    Icon(Icons.search, size: 24),
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      context.go('/main/follow_request');
+                    },
+                    child: Icon(Icons.person_add, size: 30),
+                  ),
+
+                  SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () {
+                      context.go('/main/follow');
+                    },
+                    child: Icon(Icons.search, size: 30),
+                  ),
+                ],
               ),
             ),
 
@@ -47,8 +52,7 @@ class _MainScreenState extends State<MainScreen> {
                     context: context,
                     backgroundColor: Colors.white,
                     builder:
-                        (context) =>
-                        ChangeNotifierProvider(
+                        (context) => ChangeNotifierProvider(
                           create: (_) => BottomSheetViewModel(),
                           child: BottomSheetScreen(
                             onSaved: (message, time, color) {
@@ -63,10 +67,10 @@ class _MainScreenState extends State<MainScreen> {
                   );
                 },
                 // child: MainItem(
-                  // name:,
-                  // statusTime:,
-                  // statusMessage:,
-                  // statusColor:,
+                // name:,
+                // statusTime:,
+                // statusMessage:,
+                // statusColor:,
                 // ),
               ),
             ),
