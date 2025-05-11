@@ -56,7 +56,6 @@ class _FollowScreenState extends State<FollowScreen> {
             backgroundColor: Colors.white,
             elevation: 0,
             toolbarHeight: 56,
-            automaticallyImplyLeading: false,
             title: const Text(
               '동료 추가',
               style: TextStyle(
@@ -99,7 +98,9 @@ class _FollowScreenState extends State<FollowScreen> {
                               width: 22,
                               height: 10,
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black.withOpacity(0.35)),
+                                border: Border.all(
+                                  color: Colors.black.withOpacity(0.35),
+                                ),
                                 borderRadius: BorderRadius.circular(2.6),
                               ),
                             ),
@@ -128,15 +129,23 @@ class _FollowScreenState extends State<FollowScreen> {
                   children: [
                     // 검색창
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFCFCFCF), width: 1.3),
+                          border: Border.all(
+                            color: const Color(0xFFCFCFCF),
+                            width: 1.3,
+                          ),
                         ),
                         child: TextField(
                           controller: _searchController,
                           focusNode: _searchFocusNode,
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.search,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: '검색',
@@ -145,7 +154,9 @@ class _FollowScreenState extends State<FollowScreen> {
                               color: const Color(0xFFCFCFCF),
                               size: 20,
                             ),
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 10.0,
+                            ),
                           ),
                         ),
                       ),
@@ -154,7 +165,11 @@ class _FollowScreenState extends State<FollowScreen> {
                     // 검색어 표시
                     if (state.searchQuery.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 16.0),
+                        padding: const EdgeInsets.only(
+                          left: 16.0,
+                          top: 8.0,
+                          bottom: 16.0,
+                        ),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -168,87 +183,7 @@ class _FollowScreenState extends State<FollowScreen> {
                       ),
 
                     // 검색 결과 또는 로딩/에러 표시
-                    Expanded(
-                      child: _buildSearchResults(state),
-                    ),
-
-                    // 키보드 표시 영역 (실제 앱에서는 시스템이 표시)
-                    if (_isSearchFocused)
-                      Container(
-                        height: 342,
-                        width: double.infinity,
-                        color: const Color(0xFF939393).withOpacity(0.9),
-                        child: Column(
-                          children: [
-                            // 자동 완성 영역
-                            Container(
-                              color: Colors.white.withOpacity(0.9),
-                              padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFEBEDF0),
-                                      borderRadius: BorderRadius.circular(4.6),
-                                    ),
-                                    child: const Text(
-                                      'The',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 20),
-                                  const Text(
-                                    'the',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 20),
-                                  const Text(
-                                    'to',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // 키보드는 일반적으로 시스템 UI의 일부이기 때문에 여기서는 단순화된 표현만 포함
-                            const Expanded(
-                              child: Center(
-                                child: Text(
-                                  '시스템 키보드',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            // 홈 인디케이터
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Container(
-                                width: 134,
-                                height: 5,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    Expanded(child: _buildSearchResults(state)),
                   ],
                 ),
               ),
@@ -262,9 +197,7 @@ class _FollowScreenState extends State<FollowScreen> {
   Widget _buildSearchResults(FollowState state) {
     // 로딩 상태
     if (state.isSearching) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     // 에러 상태
@@ -272,24 +205,20 @@ class _FollowScreenState extends State<FollowScreen> {
       return Center(
         child: Text(
           state.errorMessage!,
-          style: const TextStyle(
-            color: Colors.red,
-            fontSize: 16,
-          ),
+          style: const TextStyle(color: Colors.red, fontSize: 16),
           textAlign: TextAlign.center,
         ),
       );
     }
 
     // 검색 결과가 없는 경우
-    if (state.searchResults.isEmpty && state.searchQuery.isNotEmpty && !state.isSearching) {
+    if (state.searchResults.isEmpty &&
+        state.searchQuery.isNotEmpty &&
+        !state.isSearching) {
       return const Center(
         child: Text(
           '검색 결과가 없습니다.',
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 16,
-          ),
+          style: TextStyle(color: Colors.grey, fontSize: 16),
         ),
       );
     }
@@ -314,10 +243,7 @@ class _FollowScreenState extends State<FollowScreen> {
     return const Center(
       child: Text(
         '사용자를 검색해보세요.',
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 16,
-        ),
+        style: TextStyle(color: Colors.grey, fontSize: 16),
       ),
     );
   }
@@ -346,31 +272,32 @@ class _FollowScreenState extends State<FollowScreen> {
               ],
             ),
             // 프로필 이미지 표시 (이미 URL이 있다면)
-            child: user.imageUrl.isEmpty
-                ? Center(
-              child: Icon(
-                Icons.person,
-                size: 30,
-                color: Colors.grey[300],
-              ),
-            )
-                : ClipOval(
-              child: Image.network(
-                user.imageUrl,
-                width: 56,
-                height: 56,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Center(
-                    child: Icon(
-                      Icons.person,
-                      size: 30,
-                      color: Colors.grey[300],
+            child:
+                user.imageUrl.isEmpty
+                    ? Center(
+                      child: Icon(
+                        Icons.person,
+                        size: 30,
+                        color: Colors.grey[300],
+                      ),
+                    )
+                    : ClipOval(
+                      child: Image.network(
+                        user.imageUrl,
+                        width: 56,
+                        height: 56,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Icon(
+                              Icons.person,
+                              size: 30,
+                              color: Colors.grey[300],
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  );
-                },
-              ),
-            ),
           ),
           const SizedBox(width: 16),
           // 사용자 정보
@@ -407,54 +334,61 @@ class _FollowScreenState extends State<FollowScreen> {
             height: 36,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isRequestSending ? Colors.grey : const Color(0xFF2E8B57),
+                backgroundColor:
+                    isRequestSending ? Colors.grey : const Color(0xFF2E8B57),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
                 ),
                 elevation: 0,
               ),
-              onPressed: isRequestSending
-                  ? null
-                  : () {
-                viewModel.sendFollowRequest(
-                  toUserId: user.uid,
-                  toUserName: user.nickname,
-                  toUserImageUrl: user.imageUrl,
-                  onSuccess: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${user.nickname}님에게 팔로우 요청을 보냈습니다.'),
-                        backgroundColor: Colors.green,
+              onPressed:
+                  isRequestSending
+                      ? null
+                      : () {
+                        viewModel.sendFollowRequest(
+                          toUserId: user.uid,
+                          toUserName: user.nickname,
+                          toUserImageUrl: user.imageUrl,
+                          onSuccess: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${user.nickname}님에게 팔로우 요청을 보냈습니다.',
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          },
+                          onError: (error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          },
+                        );
+                      },
+              child:
+                  isRequestSending
+                      ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      )
+                      : const Text(
+                        '요청',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    );
-                  },
-                  onError: (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(error),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  },
-                );
-              },
-              child: isRequestSending
-                  ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-                  : const Text(
-                '요청',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
             ),
           ),
         ],
