@@ -15,6 +15,7 @@ class ProfileEditScreen extends StatefulWidget {
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final TextEditingController _nicknameController = TextEditingController();
+  bool _isInitialized = false;
 
   @override
   void initState() {
@@ -38,9 +39,15 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       builder: (context, viewModel, child) {
         final state = viewModel.state;
 
-        // 프로필 로딩 완료 시 닉네임 값 설정
-        if (_nicknameController.text != state.nickname) {
-          _nicknameController.text = state.nickname;
+        // 프로필 로딩 완료 시 한 번만 닉네임 값 설정
+        if (!_isInitialized && state.nickname.isNotEmpty && !state.isLoading) {
+          // 빌드 후 다음 프레임에서 실행
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              _nicknameController.text = state.nickname;
+              _isInitialized = true;
+            }
+          });
         }
 
         return Scaffold(
@@ -110,7 +117,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                               backgroundColor: Colors.green,
                             ),
                           );
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(true); // 성공 시 true 반환
                         },
                         onError: (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
