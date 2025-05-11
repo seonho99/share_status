@@ -141,7 +141,9 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   }
 
   @override
-  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(List<String> userIds) async {
+  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(
+    List<String> userIds,
+  ) async {
     return _dataSource.getFollowingUsersStatus(userIds);
   }
 
@@ -165,6 +167,18 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
       userId: userId,
       nickname: nickname,
       imageUrl: imageUrl,
+    );
+  }
+
+  // 비밀번호 변경 메서드 추가
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    return _dataSource.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
     );
   }
 }

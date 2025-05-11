@@ -8,9 +8,11 @@ import 'component/follow/follow_view_model.dart';
 import 'component/follow_request/follow_request_view_model.dart';
 import 'component/main/main_view_model.dart';
 import 'component/navigation/navigation_view_model.dart';
+import 'component/password_change/password_change_view_model.dart';
 import 'component/profile_edit/profile_edit_view_model.dart';
 import 'data/data_source/firebase_data_source_impl.dart';
 import 'data/repository/firebase_repository_impl.dart';
+import 'domain/usecase/password_change_use_case.dart';
 import 'domain/usecase/profile_usecase.dart';
 import 'domain/usecase/sign_up_usecase.dart';
 import 'domain/usecase/sign_in_use_case.dart';
@@ -62,7 +64,9 @@ void main() async {
           create: (_) => ProfileEditViewModel(ProfileUseCase(repository)),
         ),
         Provider(create: (_) => StatusUseCase(repository)), // 필요시 추가
-
+        ChangeNotifierProvider(
+          create: (_) => PasswordChangeViewModel(PasswordChangeUseCase(repository)),
+        ),
       ],
       child: const MyApp(),
     ),

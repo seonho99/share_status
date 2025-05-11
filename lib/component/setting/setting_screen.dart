@@ -46,7 +46,9 @@ class SettingScreen extends StatelessWidget {
                       context,
                       onTap: () async {
                         // ProfileEditScreen으로 이동하고 결과를 기다림
-                        final result = await context.push('/settings/${Routes.profileEdit}');
+                        final result = await context.push(
+                          '/settings/${Routes.profileEdit}',
+                        );
 
                         // 프로필 수정이 완료되었을 경우, 상위 화면들에 알림
                         if (result == true && context.mounted) {
@@ -56,12 +58,18 @@ class SettingScreen extends StatelessWidget {
                       },
                     ),
                     const Divider(height: 1, thickness: 0.3),
-
-                    _buildSettingsItem('서비스 이용 약관', context),
-                    const Divider(height: 1, thickness: 0.3),
-                    _buildSettingsItem('비밀번호 수정', context),
+                    _buildSettingsItem(
+                      '비밀번호 수정',
+                      context,
+                      onTap: () {
+                        context.push('/settings/${Routes.passwordChange}');
+                      },
+                    ),
                     const Divider(height: 1, thickness: 0.3),
                     _buildSettingsItem('공지 사항', context),
+                    const Divider(height: 1, thickness: 0.3),
+
+                    _buildSettingsItem('서비스 이용 약관', context),
 
                     const Divider(height: 1, thickness: 0.3),
                     const Spacer(),

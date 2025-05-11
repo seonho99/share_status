@@ -80,4 +80,10 @@ abstract interface class FirebaseDataSource {
     required String nickname,
     required String imageUrl,
   });
+
+  // 비밀번호 변경 메서드 추가
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
 }

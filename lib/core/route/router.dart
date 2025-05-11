@@ -8,6 +8,7 @@ import '../../component/auth/sign_up/sign_up_screen.dart';
 import '../../component/follow/follow_screen.dart';
 import '../../component/follow_request/follow_request_screen.dart';
 import '../../component/main/main_screen.dart';
+import '../../component/password_change/password_changed_screen.dart';
 import '../../component/profile_edit/profile_edit_screen.dart';
 import '../../component/navigation/navigation_widget.dart';
 import '../../component/setting/setting_screen.dart';
@@ -83,6 +84,12 @@ final router = GoRouter(
                   path: Routes.profileEdit,
                   builder: (context, state) {
                     return ProfileEditScreen();
+                  },
+                ),
+                GoRoute(
+                  path: Routes.passwordChange,
+                  builder: (context, state) {
+                    return PasswordChangeScreen();
                   },
                 ),
               ],

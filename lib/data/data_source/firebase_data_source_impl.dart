@@ -450,4 +450,45 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       throw Exception('사용자 프로필 업데이트 중 오류가 발생했습니다: ${e.toString()}');
     }
   }
+
+  // 비밀번호 변경 메서드 추가
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null || user.email == null) {
+        throw Exception('로그인된 사용자가 없습니다.');
+      }
+
+      // 재인증 확인
+      final credential = EmailAuthCredential(
+        email: user.email!,
+        password: currentPassword,
+      );
+
+      // 사용자 재인증
+      await user.reauthenticateWithCredential(credential);
+
+      // 비밀번호 변경
+      await user.updatePassword(newPassword);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'wrong-password':
+          throw Exception('현재 비밀번호가 올바르지 않습니다.');
+        case 'invalid-credential':
+          throw Exception('인증 정보가 유효하지 않습니다.');
+        case 'requires-recent-login':
+          throw Exception('보안을 위해 다시 로그인 후 시도해주세요.');
+        case 'weak-password':
+          throw Exception('새 비밀번호가 너무 약합니다.');
+        default:
+          throw Exception('비밀번호 변경 중 오류가 발생했습니다: ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('비밀번호 변경 중 알 수 없는 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
 }
