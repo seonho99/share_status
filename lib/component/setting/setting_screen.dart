@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
 
 
 class SettingScreen extends StatelessWidget {
@@ -45,13 +44,13 @@ class SettingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
-                    _buildSettingsItem('서비스 이용 약관', context),
+                    _buildSettingsItem('프로필 수정', context),
                     const Divider(height: 1, thickness: 0.3),
                     _buildSettingsItem('비밀번호 수정', context),
                     const Divider(height: 1, thickness: 0.3),
                     _buildSettingsItem('공지 사항', context),
                     const Divider(height: 1, thickness: 0.3),
-                    _buildSettingsItem('프로필 수정', context),
+                    _buildSettingsItem('서비스 이용약관', context),
                     const Divider(height: 1, thickness: 0.3),
                     const Spacer(),
                     const Padding(
