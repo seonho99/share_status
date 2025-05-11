@@ -198,12 +198,23 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(20.0),
                   child: GestureDetector(
                     onTap: () {
-                      showBottomSheet(
+                      showModalBottomSheet(
                         context: context,
                         backgroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        isScrollControlled: true,
                         builder: (context) => ChangeNotifierProvider(
-                          create: (_) => BottomSheetViewModel(),
+                          create: (_) {
+                            final vm = BottomSheetViewModel();
+                            vm.reset(); // 초기화 상태 리셋
+                            return vm;
+                          },
                           child: BottomSheetScreen(
+                            currentMessage: _statusMessage,
+                            currentTime: _statusTime,
+                            currentColor: _statusColor,
                             onSaved: (message, time, color) async {
                               // 즉시 UI 업데이트
                               if (mounted) {
