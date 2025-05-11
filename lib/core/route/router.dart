@@ -1,3 +1,4 @@
+// lib/core/route/router.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -39,8 +40,6 @@ final router = GoRouter(
         return PasswordResetScreen();
       },
     ),
-    // 팔로우 요청 화면 라우트 추가
-
     StatefulShellRoute.indexedStack(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state, navigationShell) {
