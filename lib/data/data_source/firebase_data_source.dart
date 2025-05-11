@@ -54,4 +54,14 @@ abstract interface class FirebaseDataSource {
   // 팔로워 목록 조회
   Future<List<Map<String, dynamic>>> getFollowers(String userId);
 
+  // 상태 관련 메서드 추가
+  Future<void> saveUserStatus({
+    required String userId,
+    required String statusMessage,
+    required String statusTime,
+    required int colorStatus,
+  });
+
+  Future<Map<String, dynamic>?> getUserStatus(String userId);
+
 }

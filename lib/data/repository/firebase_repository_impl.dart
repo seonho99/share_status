@@ -50,7 +50,7 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   bool get isSignedIn => _dataSource.isSignedIn;
 
-// 팔로우 관련 메서드
+  // 팔로우 관련 메서드
   @override
   Future<List<UserModel>> searchUsers(String query) async {
     final data = await _dataSource.searchUsers(query);
@@ -76,7 +76,11 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   }
 
   @override
-  Future<void> acceptFollowRequest(String requestId, String fromUserId, String toUserId) {
+  Future<void> acceptFollowRequest(
+    String requestId,
+    String fromUserId,
+    String toUserId,
+  ) {
     return _dataSource.acceptFollowRequest(requestId, fromUserId, toUserId);
   }
 
@@ -105,5 +109,34 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   Future<List<UserModel>> getFollowers(String userId) async {
     final data = await _dataSource.getFollowers(userId);
     return data.map((json) => UserDto.fromJson(json).toDomain()).toList();
+  }
+
+  @override
+  Future<void> saveUserStatus({
+    required String statusMessage,
+    required String statusTime,
+    required int colorStatus,
+  }) async {
+    final userId = _dataSource.currentUserId;
+    if (userId == null) {
+      throw Exception('로그인된 사용자가 없습니다.');
+    }
+
+    return _dataSource.saveUserStatus(
+      userId: userId,
+      statusMessage: statusMessage,
+      statusTime: statusTime,
+      colorStatus: colorStatus,
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getUserStatus() async {
+    final userId = _dataSource.currentUserId;
+    if (userId == null) {
+      throw Exception('로그인된 사용자가 없습니다.');
+    }
+
+    return _dataSource.getUserStatus(userId);
   }
 }

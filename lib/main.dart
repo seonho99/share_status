@@ -12,6 +12,7 @@ import 'data/repository/firebase_repository_impl.dart';
 import 'domain/usecase/sign_up_usecase.dart';
 import 'domain/usecase/sign_in_use_case.dart';
 import 'domain/usecase/password_reset_usecase.dart';
+import 'domain/usecase/status_usecase.dart';
 import 'domain/usecase/user_usecase.dart';
 import 'domain/usecase/follow_usecase.dart';
 import 'firebase_options.dart';
@@ -51,6 +52,8 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => MainViewModel(FollowUseCase(repository)),
         ),
+        Provider(create: (_) => StatusUseCase(repository)), // 필요시 추가
+
       ],
       child: const MyApp(),
     ),

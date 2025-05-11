@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/result.dart';
 import '../../core/route/routes.dart';
+import '../../data/repository/firebase_repository_impl.dart';
+import '../../domain/usecase/status_usecase.dart';
 import '../bottom_sheet/bottom_sheet_screen.dart';
 import '../bottom_sheet/bottom_sheet_view_model.dart';
 import '../widget/main_item.dart';
@@ -25,11 +28,28 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _loadFollowingUsers();
+    _loadUserStatus();
   }
 
   void _loadFollowingUsers() {
     final viewModel = context.read<MainViewModel>();
     viewModel.loadFollowingUsers();
+  }
+
+  void _loadUserStatus() async {
+    final repository = context.read<FirebaseRepositoryImpl>();
+    final statusUseCase = StatusUseCase(repository);
+
+    final result = await statusUseCase.getUserStatus();
+
+    if (result is Success && result.data != null) {
+      final statusData = result.data!;
+      setState(() {
+        _statusMessage = statusData['statusMessage'] ?? '';
+        _statusTime = statusData['statusTime'] ?? '';
+        _statusColor = Color(statusData['colorStatus'] ?? 0xFFD9D9D9);
+      });
+    }
   }
 
   @override
@@ -77,25 +97,42 @@ class _MainScreenState extends State<MainScreen> {
                       showBottomSheet(
                         context: context,
                         backgroundColor: Colors.white,
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (_) => BottomSheetViewModel(),
-                          child: BottomSheetScreen(
-                            onSaved: (message, time, color) {
-                              setState(() {
-                                _statusMessage = message;
-                                _statusTime = time;
-                                _statusColor = color;
-                              });
-                            },
-                          ),
-                        ),
+                        builder:
+                            (context) =>
+                            ChangeNotifierProvider(
+                              create: (_) => BottomSheetViewModel(),
+                              child: BottomSheetScreen(
+                                onSaved: (message, time, color)async {
+                                  setState(() {
+                                    _statusMessage = message;
+                                    _statusTime = time;
+                                    _statusColor = color;
+                                  });
+
+                                  // Firebase에 상태 저장
+                                  final repository = context.read<
+                                      FirebaseRepositoryImpl>();
+                                  final statusUseCase = StatusUseCase(
+                                      repository);
+
+                                  await statusUseCase.saveStatus(
+                                      statusMessage: message,
+                                      statusTime: time,
+                                      colorStatus:color.value,
+                                  );
+                                  },
+                              ),
+                            ),
                       );
                     },
                     // 자신의 상태 표시
                     child: MainItem(
                       name: '나의 상태',
                       statusTime: _statusTime,
-                      statusMessage: _statusMessage.isEmpty ? '상태를 설정해보세요' : _statusMessage,
+                      statusMessage:
+                      _statusMessage.isEmpty
+                          ? '상태를 설정해보세요'
+                          : _statusMessage,
                       statusColor: _statusColor,
                     ),
                   ),
@@ -132,54 +169,56 @@ class _MainScreenState extends State<MainScreen> {
                 if (state.isLoading)
                   Expanded(child: Center(child: CircularProgressIndicator()))
                 // 에러 상태
-                else if (state.errorMessage != null)
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            state.errorMessage!,
-                            style: TextStyle(color: Colors.red, fontSize: 16),
+                else
+                  if (state.errorMessage != null)
+                    Expanded(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              state.errorMessage!,
+                              style: TextStyle(color: Colors.red, fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: _loadFollowingUsers,
+                              child: Text('다시 시도'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  // 팔로우한 사용자가 없는 경우
+                  else
+                    if (state.followingUsers.isEmpty)
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            '팔로우한 사용자가 없습니다.\n사용자를 검색하여 팔로우를 요청해보세요.',
+                            style: TextStyle(color: Colors.grey, fontSize: 16),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: _loadFollowingUsers,
-                            child: Text('다시 시도'),
-                          ),
-                        ],
+                        ),
+                      )
+                    // 팔로우한 사용자 목록 표시
+                    else
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(20),
+                          itemCount: state.followingUsers.length,
+                          itemBuilder: (context, index) {
+                            final user = state.followingUsers[index];
+                            return MainItem(
+                              name: user.nickname,
+                              statusTime: '', // 상태 시간은 별도로 구현 필요
+                              statusMessage: '', // 상태 메시지는 별도로 구현 필요
+                              statusColor: Color(0xFFD9D9D9), // 기본 회색
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  )
-                // 팔로우한 사용자가 없는 경우
-                else if (state.followingUsers.isEmpty)
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        '팔로우한 사용자가 없습니다.\n사용자를 검색하여 팔로우를 요청해보세요.',
-                        style: TextStyle(color: Colors.grey, fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                // 팔로우한 사용자 목록 표시
-                else
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(20),
-                      itemCount: state.followingUsers.length,
-                      itemBuilder: (context, index) {
-                        final user = state.followingUsers[index];
-                        return MainItem(
-                          name: user.nickname,
-                          statusTime: '', // 상태 시간은 별도로 구현 필요
-                          statusMessage: '', // 상태 메시지는 별도로 구현 필요
-                          statusColor: Color(0xFFD9D9D9), // 기본 회색
-                        );
-                      },
-                    ),
-                  ),
               ],
             ),
           ),

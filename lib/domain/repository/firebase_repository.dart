@@ -3,6 +3,7 @@ import '../model/user_model.dart';
 
 abstract interface class FirebaseRepository {
   Future<void> createUser(UserModel user);
+
   Future<bool> isIdAvailable(String id);
 
   Future<String> signInWithEmailAndPassword({
@@ -18,7 +19,7 @@ abstract interface class FirebaseRepository {
 
   bool get isSignedIn;
 
-// 팔로우 관련 메서드
+  // 팔로우 관련 메서드
   // 사용자 검색
   Future<List<UserModel>> searchUsers(String query);
 
@@ -32,7 +33,11 @@ abstract interface class FirebaseRepository {
   Future<List<FollowRequest>> getSentFollowRequests(String userId);
 
   // 팔로우 요청 수락
-  Future<void> acceptFollowRequest(String requestId, String fromUserId, String toUserId);
+  Future<void> acceptFollowRequest(
+    String requestId,
+    String fromUserId,
+    String toUserId,
+  );
 
   // 팔로우 요청 거절
   Future<void> rejectFollowRequest(String requestId);
@@ -48,4 +53,13 @@ abstract interface class FirebaseRepository {
 
   // 팔로워 목록 조회
   Future<List<UserModel>> getFollowers(String userId);
+
+  // 상태 관련 메서드 추가
+  Future<void> saveUserStatus({
+    required String statusMessage,
+    required String statusTime,
+    required int colorStatus,
+  });
+
+  Future<Map<String, dynamic>?> getUserStatus();
 }

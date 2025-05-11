@@ -11,6 +11,7 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
     'follow_requests',
   );
   final _follows = FirebaseFirestore.instance.collection('follows');
+  final _statuses = FirebaseFirestore.instance.collection('user_statuses');
 
   @override
   Future<void> saveUser(UserDto user) async {
@@ -120,10 +121,10 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
       // ID로만 검색 (부분 일치)
       final querySnapshot =
-      await _users
-          .where('id', isGreaterThanOrEqualTo: query)
-          .where('id', isLessThanOrEqualTo: '$query\uf8ff')
-          .get();
+          await _users
+              .where('id', isGreaterThanOrEqualTo: query)
+              .where('id', isLessThanOrEqualTo: '$query\uf8ff')
+              .get();
 
       // 결과에서 현재 사용자 제외
       final results = <Map<String, dynamic>>[];
@@ -138,6 +139,7 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       throw Exception('사용자 검색 중 오류가 발생했습니다: ${e.toString()}');
     }
   }
+
   // 팔로우 요청 보내기
   @override
   Future<void> sendFollowRequest(FollowRequestDto request) async {
@@ -171,20 +173,24 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
   // 받은 팔로우 요청 목록 조회
   @override
-  Future<List<FollowRequestDto>> getReceivedFollowRequests(String userId) async {
+  Future<List<FollowRequestDto>> getReceivedFollowRequests(
+    String userId,
+  ) async {
     try {
       // orderBy 제거하고 where만 사용
-      final querySnapshot = await _followRequests
-          .where('toUserId', isEqualTo: userId)
-          .get();
+      final querySnapshot =
+          await _followRequests.where('toUserId', isEqualTo: userId).get();
 
       // 데이터를 가져온 후 메모리에서 정렬
-      final requests = querySnapshot.docs
-          .map((doc) => FollowRequestDto.fromJson({
-        ...doc.data(),
-        'id': doc.id, // 문서 ID 추가
-      }))
-          .toList();
+      final requests =
+          querySnapshot.docs
+              .map(
+                (doc) => FollowRequestDto.fromJson({
+                  ...doc.data(),
+                  'id': doc.id, // 문서 ID 추가
+                }),
+              )
+              .toList();
 
       // createdAt 기준으로 내림차순 정렬 (최신순)
       requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -201,17 +207,18 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
     try {
       // orderBy 제거하고 where만 사용
       final querySnapshot =
-      await _followRequests
-          .where('fromUserId', isEqualTo: userId)
-          .get();
+          await _followRequests.where('fromUserId', isEqualTo: userId).get();
 
       // 데이터를 가져온 후 메모리에서 정렬
-      final requests = querySnapshot.docs
-          .map((doc) => FollowRequestDto.fromJson({
-        ...doc.data(),
-        'id': doc.id, // 문서 ID 추가
-      }))
-          .toList();
+      final requests =
+          querySnapshot.docs
+              .map(
+                (doc) => FollowRequestDto.fromJson({
+                  ...doc.data(),
+                  'id': doc.id, // 문서 ID 추가
+                }),
+              )
+              .toList();
 
       // createdAt 기준으로 내림차순 정렬 (최신순)
       requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -226,10 +233,10 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
   // 팔로우 요청 수락
   @override
   Future<void> acceptFollowRequest(
-      String requestId,
-      String fromUserId,
-      String toUserId,
-      ) async {
+    String requestId,
+    String fromUserId,
+    String toUserId,
+  ) async {
     try {
       final batch = FirebaseFirestore.instance.batch();
 
@@ -345,6 +352,40 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       return users;
     } catch (e) {
       throw Exception('팔로워 목록 조회 중 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
+
+  // 상태 저장
+  @override
+  Future<void> saveUserStatus({
+    required String userId,
+    required String statusMessage,
+    required String statusTime,
+    required int colorStatus,
+  }) async {
+    try {
+      await _statuses.doc(userId).set({
+        'statusMessage': statusMessage,
+        'statusTime': statusTime,
+        'colorStatus': colorStatus,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('상태 저장 중 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
+
+  // 상태 조회
+  @override
+  Future<Map<String, dynamic>?> getUserStatus(String userId) async {
+    try {
+      final doc = await _statuses.doc(userId).get();
+      if (doc.exists) {
+        return doc.data();
+      }
+      return null;
+    } catch (e) {
+      throw Exception('상태 조회 중 오류가 발생했습니다: ${e.toString()}');
     }
   }
 }
