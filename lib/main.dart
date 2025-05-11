@@ -31,6 +31,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider(create: (_) => repository),
+
         ChangeNotifierProvider(create: (_) => BottomSheetViewModel()),
         ChangeNotifierProvider(
           create:

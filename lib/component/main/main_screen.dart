@@ -23,12 +23,17 @@ class _MainScreenState extends State<MainScreen> {
   String _statusTime = '';
   Color _statusColor = Color(0xFFD9D9D9);
 
+
+
   // 화면에 진입할 때마다 팔로우 목록을 새로고침
   @override
   void initState() {
     super.initState();
     _loadFollowingUsers();
-    _loadUserStatus();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadUserStatus();
+    });
   }
 
   void _loadFollowingUsers() {
@@ -42,13 +47,21 @@ class _MainScreenState extends State<MainScreen> {
 
     final result = await statusUseCase.getUserStatus();
 
-    if (result is Success && result.data != null) {
-      final statusData = result.data!;
-      setState(() {
-        _statusMessage = statusData['statusMessage'] ?? '';
-        _statusTime = statusData['statusTime'] ?? '';
-        _statusColor = Color(statusData['colorStatus'] ?? 0xFFD9D9D9);
-      });
+    switch (result) {
+      case Success<Map<String, dynamic>?>():
+        if (result.data != null) {
+          final statusData = result.data!;
+          setState(() {
+            _statusMessage = statusData['statusMessage'] ?? '';
+            _statusTime = statusData['statusTime'] ?? '';
+            _statusColor = Color(statusData['colorStatus'] ?? 0xFFD9D9D9);
+          });
+        }
+        break;
+      case Error<Map<String, dynamic>?>():
+      // 에러 처리 (필요한 경우)
+        debugPrint('상태 로드 실패: ${result.failure.message}');
+        break;
     }
   }
 
@@ -120,6 +133,7 @@ class _MainScreenState extends State<MainScreen> {
                                       statusTime: time,
                                       colorStatus:color.value,
                                   );
+
                                   },
                               ),
                             ),
