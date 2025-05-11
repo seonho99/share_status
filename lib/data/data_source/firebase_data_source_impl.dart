@@ -177,7 +177,6 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
     String userId,
   ) async {
     try {
-      // orderBy 제거하고 where만 사용
       final querySnapshot =
           await _followRequests.where('toUserId', isEqualTo: userId).get();
 
@@ -192,7 +191,6 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
               )
               .toList();
 
-      // createdAt 기준으로 내림차순 정렬 (최신순)
       requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       return requests;
@@ -220,7 +218,6 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
               )
               .toList();
 
-      // createdAt 기준으로 내림차순 정렬 (최신순)
       requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       return requests;
@@ -229,7 +226,6 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
     }
   }
 
-  // 팔로우 요청 수락
   // 팔로우 요청 수락
   @override
   Future<void> acceptFollowRequest(
@@ -421,6 +417,37 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       return statusMap;
     } catch (e) {
       throw Exception('사용자 상태 조회 중 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
+
+  // 프로필 관련 메서드 추가
+  @override
+  Future<Map<String, dynamic>?> getUserProfile(String userId) async {
+    try {
+      final doc = await _users.doc(userId).get();
+      if (doc.exists) {
+        return {...doc.data()!, 'uid': doc.id};
+      }
+      return null;
+    } catch (e) {
+      throw Exception('사용자 프로필 조회 중 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> updateUserProfile({
+    required String userId,
+    required String nickname,
+    required String imageUrl,
+  }) async {
+    try {
+      await _users.doc(userId).update({
+        'nickname': nickname,
+        'imageUrl': imageUrl,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('사용자 프로필 업데이트 중 오류가 발생했습니다: ${e.toString()}');
     }
   }
 }

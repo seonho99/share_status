@@ -37,7 +37,11 @@ abstract interface class FirebaseDataSource {
   Future<List<FollowRequestDto>> getSentFollowRequests(String userId);
 
   // 팔로우 요청 수락
-  Future<void> acceptFollowRequest(String requestId, String fromUserId, String toUserId);
+  Future<void> acceptFollowRequest(
+    String requestId,
+    String fromUserId,
+    String toUserId,
+  );
 
   // 팔로우 요청 거절
   Future<void> rejectFollowRequest(String requestId);
@@ -64,6 +68,16 @@ abstract interface class FirebaseDataSource {
 
   Future<Map<String, dynamic>?> getUserStatus(String userId);
 
-  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(List<String> userIds);
+  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(
+    List<String> userIds,
+  );
 
+  // 프로필 관련 메서드 추가
+  Future<Map<String, dynamic>?> getUserProfile(String userId);
+
+  Future<void> updateUserProfile({
+    required String userId,
+    required String nickname,
+    required String imageUrl,
+  });
 }

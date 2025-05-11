@@ -5,16 +5,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 
 import '../../core/result.dart';
-import '../../domain/model/user_model.dart';
-import '../../domain/repository/firebase_repository.dart';
+import '../../domain/usecase/profile_usecase.dart';
 import 'profile_edit_state.dart';
 
 class ProfileEditViewModel extends ChangeNotifier {
-  final FirebaseRepository _repository;
+  final ProfileUseCase _profileUseCase;
   final ImagePicker _imagePicker = ImagePicker();
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  ProfileEditViewModel(this._repository);
+  ProfileEditViewModel(this._profileUseCase);
 
   ProfileEditState _state = ProfileEditState.initial();
 
@@ -26,28 +25,22 @@ class ProfileEditViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final uid = _repository.currentUserId;
-      if (uid == null) {
-        _state = _state.copyWith(
-          isLoading: false,
-          errorMessage: '로그인이 필요합니다.',
-        );
-        return;
-      }
+      final result = await _profileUseCase.getCurrentUserProfile();
 
-      // Firestore에서 사용자 정보 조회
-      final userData = await _getUserData(uid);
-      if (userData != null) {
-        _state = _state.copyWith(
-          nickname: userData['nickname'] ?? '',
-          imageUrl: userData['imageUrl'] ?? '',
-          isLoading: false,
-        );
-      } else {
-        _state = _state.copyWith(
-          isLoading: false,
-          errorMessage: '사용자 정보를 찾을 수 없습니다.',
-        );
+      switch (result) {
+        case Success():
+          _state = _state.copyWith(
+            nickname: result.data.nickname,
+            imageUrl: result.data.imageUrl,
+            isLoading: false,
+          );
+          break;
+        case Error():
+          _state = _state.copyWith(
+            isLoading: false,
+            errorMessage: result.failure.message,
+          );
+          break;
       }
     } catch (e) {
       _state = _state.copyWith(
@@ -56,16 +49,6 @@ class ProfileEditViewModel extends ChangeNotifier {
       );
     }
     notifyListeners();
-  }
-
-  // Firestore에서 사용자 데이터 조회 (임시 구현)
-  Future<Map<String, dynamic>?> _getUserData(String uid) async {
-    // 실제 구현에서는 _repository를 통해 Firestore 조회
-    // 현재는 임시 데이터 반환
-    return {
-      'nickname': '현재닉네임',
-      'imageUrl': 'https://example.com/default_profile.png',
-    };
   }
 
   // 닉네임 변경
@@ -102,10 +85,9 @@ class ProfileEditViewModel extends ChangeNotifier {
   // 이미지 업로드
   Future<String?> _uploadImage(File imageFile) async {
     try {
-      final uid = _repository.currentUserId;
-      if (uid == null) return null;
-
-      final fileName = 'profile_$uid${path.extension(imageFile.path)}';
+      // 현재 시간을 사용하여 고유한 파일명 생성
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = 'profile_$timestamp${path.extension(imageFile.path)}';
       final ref = _storage.ref().child('profile_images/$fileName');
 
       // 업로드 상태 업데이트
@@ -143,12 +125,6 @@ class ProfileEditViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final uid = _repository.currentUserId;
-      if (uid == null) {
-        onError('로그인이 필요합니다.');
-        return;
-      }
-
       String? imageUrl = state.imageUrl;
 
       // 새로운 이미지가 선택된 경우 업로드
@@ -160,17 +136,31 @@ class ProfileEditViewModel extends ChangeNotifier {
         }
       }
 
-      // Firestore 업데이트
-      await _updateUserProfile(uid, state.nickname, imageUrl!);
-
-      _state = _state.copyWith(
-        isLoading: false,
-        imageUrl: imageUrl,
-        selectedImage: null, // 업로드 완료 후 선택된 이미지 제거
+      // 프로필 업데이트
+      final result = await _profileUseCase.updateUserProfile(
+        nickname: state.nickname,
+        imageUrl: imageUrl!,
       );
-      notifyListeners();
 
-      onSuccess();
+      switch (result) {
+        case Success():
+          _state = _state.copyWith(
+            isLoading: false,
+            imageUrl: imageUrl,
+            selectedImage: null, // 업로드 완료 후 선택된 이미지 제거
+          );
+          notifyListeners();
+          onSuccess();
+          break;
+        case Error():
+          _state = _state.copyWith(
+            isLoading: false,
+            errorMessage: result.failure.message,
+          );
+          notifyListeners();
+          onError(result.failure.message);
+          break;
+      }
     } catch (e) {
       _state = _state.copyWith(
         isLoading: false,
@@ -179,13 +169,6 @@ class ProfileEditViewModel extends ChangeNotifier {
       notifyListeners();
       onError(_state.errorMessage!);
     }
-  }
-
-  // Firestore에 사용자 프로필 업데이트 (임시 구현)
-  Future<void> _updateUserProfile(String uid, String nickname, String imageUrl) async {
-    // 실제 구현에서는 _repository를 통해 Firestore 업데이트
-    // 현재는 임시 구현
-    await Future.delayed(Duration(seconds: 1)); // 서버 통신 시뮬레이션
   }
 
   // 상태 초기화

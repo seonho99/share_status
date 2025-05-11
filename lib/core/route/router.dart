@@ -8,6 +8,7 @@ import '../../component/auth/sign_up/sign_up_screen.dart';
 import '../../component/follow/follow_screen.dart';
 import '../../component/follow_request/follow_request_screen.dart';
 import '../../component/main/main_screen.dart';
+import '../../component/profile_edit/profile_edit_screen.dart';
 import '../../component/widget/navigation_widget.dart';
 import '../../component/setting/setting_screen.dart';
 import '../../component/splash/splash_screen.dart';
@@ -77,6 +78,14 @@ final router = GoRouter(
               builder: (context, state) {
                 return SettingScreen();
               },
+              routes: [
+                GoRoute(
+                  path: Routes.profileEdit,
+                  builder: (context, state) {
+                    return ProfileEditScreen();
+                  },
+                ),
+              ],
             ),
           ],
         ),

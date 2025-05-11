@@ -144,4 +144,27 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(List<String> userIds) async {
     return _dataSource.getFollowingUsersStatus(userIds);
   }
+
+  // 프로필 관련 메서드 추가
+  @override
+  Future<UserModel> getUserProfile(String userId) async {
+    final data = await _dataSource.getUserProfile(userId);
+    if (data == null) {
+      throw Exception('사용자 정보를 찾을 수 없습니다.');
+    }
+    return UserDto.fromJson(data).toDomain();
+  }
+
+  @override
+  Future<void> updateUserProfile({
+    required String userId,
+    required String nickname,
+    required String imageUrl,
+  }) async {
+    return _dataSource.updateUserProfile(
+      userId: userId,
+      nickname: nickname,
+      imageUrl: imageUrl,
+    );
+  }
 }

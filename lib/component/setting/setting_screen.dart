@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'dart:ui';
 
+import '../../core/route/routes.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -44,13 +47,21 @@ class SettingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
-                    _buildSettingsItem('프로필 수정', context),
+                    _buildSettingsItem(
+                      '프로필 수정',
+                      context,
+                      onTap: () {
+                        context.go('/settings/${Routes.profileEdit}');
+                      },
+                    ),
+                    const Divider(height: 1, thickness: 0.3),
+
+                    _buildSettingsItem('서비스 이용 약관', context),
                     const Divider(height: 1, thickness: 0.3),
                     _buildSettingsItem('비밀번호 수정', context),
                     const Divider(height: 1, thickness: 0.3),
                     _buildSettingsItem('공지 사항', context),
-                    const Divider(height: 1, thickness: 0.3),
-                    _buildSettingsItem('서비스 이용약관', context),
+
                     const Divider(height: 1, thickness: 0.3),
                     const Spacer(),
                     const Padding(
@@ -74,21 +85,25 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsItem(String title, BuildContext context) {
+  Widget _buildSettingsItem(
+    String title,
+    BuildContext context, {
+    VoidCallback? onTap,
+  }) {
     return InkWell(
-      onTap: () {
-        // 각 설정 아이템 클릭 시 처리
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$title 선택됨')),
-        );
-      },
+      onTap:
+          onTap ??
+          () {
+            // 기본 동작: 스낵바 표시
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('$title 선택됨')));
+          },
       child: Container(
         height: 40,
         margin: const EdgeInsets.symmetric(vertical: 5),
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
