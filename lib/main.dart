@@ -7,6 +7,7 @@ import 'component/auth/sign_in/sign_in_view_model.dart';
 import 'component/follow/follow_view_model.dart';
 import 'component/follow_request/follow_request_view_model.dart';
 import 'component/main/main_view_model.dart';
+import 'component/navigation/navigation_view_model.dart';
 import 'component/profile_edit/profile_edit_view_model.dart';
 import 'data/data_source/firebase_data_source_impl.dart';
 import 'data/repository/firebase_repository_impl.dart';
@@ -35,6 +36,7 @@ void main() async {
       providers: [
         Provider(create: (_) => repository),
 
+        ChangeNotifierProvider(create: (_) => NavigationViewModel()),
         ChangeNotifierProvider(create: (_) => BottomSheetViewModel()),
         ChangeNotifierProvider(
           create:

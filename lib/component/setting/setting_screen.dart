@@ -29,13 +29,7 @@ class SettingScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          padding: const EdgeInsets.all(8.0),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Column(
@@ -50,8 +44,15 @@ class SettingScreen extends StatelessWidget {
                     _buildSettingsItem(
                       '프로필 수정',
                       context,
-                      onTap: () {
-                        context.go('/settings/${Routes.profileEdit}');
+                      onTap: () async {
+                        // ProfileEditScreen으로 이동하고 결과를 기다림
+                        final result = await context.push('/settings/${Routes.profileEdit}');
+
+                        // 프로필 수정이 완료되었을 경우, 상위 화면들에 알림
+                        if (result == true && context.mounted) {
+                          // 홈 화면으로 돌아가면서 프로필 수정 완료를 알림
+                          Navigator.of(context).pop('profile_updated');
+                        }
                       },
                     ),
                     const Divider(height: 1, thickness: 0.3),

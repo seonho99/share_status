@@ -6,6 +6,7 @@ import '../../core/result.dart';
 import '../../core/route/routes.dart';
 import '../../data/repository/firebase_repository_impl.dart';
 import '../../domain/usecase/status_usecase.dart';
+import '../../domain/usecase/profile_usecase.dart';
 import '../bottom_sheet/bottom_sheet_screen.dart';
 import '../bottom_sheet/bottom_sheet_view_model.dart';
 import '../widget/main_item.dart';
@@ -22,6 +23,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   String _statusMessage = '';
   String _statusTime = '';
   Color _statusColor = Color(0xFFD9D9D9);
+  String _myNickname = '나의 상태'; // 닉네임 상태 추가
 
   @override
   void initState() {
@@ -52,6 +54,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       if (mounted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _loadUserStatus();
+          _loadUserProfile(); // 프로필도 새로고침
         });
       }
     }
@@ -63,6 +66,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
     _loadFollowingUsers();
     _loadUserStatus();
+    _loadUserProfile(); // 닉네임 로드
   }
 
   void _loadFollowingUsers() {
@@ -101,6 +105,36 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         break;
       case Error<Map<String, dynamic>?>():
         debugPrint('상태 로드 실패: ${result.failure.message}');
+        break;
+    }
+  }
+
+  // 사용자 프로필(닉네임) 로드
+  void _loadUserProfile() async {
+    if (!mounted) return;
+
+    final repository = context.read<FirebaseRepositoryImpl>();
+    final profileUseCase = ProfileUseCase(repository);
+
+    final result = await profileUseCase.getCurrentUserProfile();
+
+    // 비동기 작업 후 mounted 체크
+    if (!mounted) return;
+
+    switch (result) {
+      case Success():
+      // setState를 다음 프레임에서 실행
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            setState(() {
+              _myNickname = result.data.nickname;
+            });
+          }
+        });
+        break;
+      case Error():
+        debugPrint('프로필 로드 실패: ${result.failure.message}');
+        // 에러가 발생해도 기본값 유지
         break;
     }
   }
@@ -201,7 +235,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                       );
                     },
                     child: MainItem(
-                      name: '나의 상태',
+                      name: _myNickname,
                       statusTime: _statusTime,
                       statusMessage: _statusMessage.isEmpty ? '상태를 설정해보세요' : _statusMessage,
                       statusColor: _statusColor,
@@ -253,7 +287,10 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                           ),
                           SizedBox(height: 16),
                           ElevatedButton(
-                            onPressed: _loadFollowingUsers,
+                            onPressed: () {
+                              _loadFollowingUsers();
+                              _loadUserProfile(); // 프로필도 새로고침
+                            },
                             child: Text('다시 시도'),
                           ),
                         ],

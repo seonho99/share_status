@@ -117,7 +117,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                               backgroundColor: Colors.green,
                             ),
                           );
-                          Navigator.of(context).pop(true); // 성공 시 true 반환
+                          // 성공적으로 저장되면 이전 화면으로 돌아가면서 true 반환
+                          Navigator.of(context).pop(true);
                         },
                         onError: (error) {
                           ScaffoldMessenger.of(context).showSnackBar(

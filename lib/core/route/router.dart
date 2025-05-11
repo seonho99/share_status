@@ -9,7 +9,7 @@ import '../../component/follow/follow_screen.dart';
 import '../../component/follow_request/follow_request_screen.dart';
 import '../../component/main/main_screen.dart';
 import '../../component/profile_edit/profile_edit_screen.dart';
-import '../../component/widget/navigation_widget.dart';
+import '../../component/navigation/navigation_widget.dart';
 import '../../component/setting/setting_screen.dart';
 import '../../component/splash/splash_screen.dart';
 import 'routes.dart';
