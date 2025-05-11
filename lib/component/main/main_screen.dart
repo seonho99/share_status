@@ -10,6 +10,7 @@ import '../../domain/usecase/profile_usecase.dart';
 import '../bottom_sheet/bottom_sheet_screen.dart';
 import '../bottom_sheet/bottom_sheet_view_model.dart';
 import '../widget/main_item.dart';
+import '../navigation/navigation_view_model.dart'; // 추가
 import 'main_view_model.dart';
 
 class MainScreen extends StatefulWidget {
@@ -57,6 +58,20 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           _loadUserProfile(); // 프로필도 새로고침
         });
       }
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // NavigationViewModel을 통해 프로필 업데이트 확인
+    final navigationViewModel = context.watch<NavigationViewModel>();
+    if (navigationViewModel.shouldRefreshMain) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadUserProfile();
+        navigationViewModel.clearProfileUpdateFlag();
+      });
     }
   }
 

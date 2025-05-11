@@ -65,167 +65,179 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
             centerTitle: true,
           ),
           body: SafeArea(
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    const Text(
-                      '보안을 위해 현재 비밀번호와 새 비밀번호를\n입력해주세요.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                        height: 1.5,
-                      ),
+            child: LayoutBuilder(  // LayoutBuilder 추가
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: ConstrainedBox(  // ConstrainedBox 추가
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
                     ),
-                    const SizedBox(height: 40),
-
-                    // 현재 비밀번호 입력 필드
-                    InputField(
-                      label: '현재 비밀번호',
-                      hintText: '현재 비밀번호를 입력해주세요.',
-                      controller: _currentPasswordController,
-                      obscureText: !state.currentPasswordVisible,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          state.currentPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          viewModel.toggleCurrentPasswordVisibility();
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // 현재 비밀번호 에러 메시지
-                    if (state.currentPasswordError != null)
-                      Text(
-                        state.currentPasswordError!,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                        ),
-                      ),
-                    const SizedBox(height: 20),
-
-                    // 새 비밀번호 입력 필드
-                    InputField(
-                      label: '새 비밀번호',
-                      hintText: '새 비밀번호를 입력해주세요.',
-                      controller: _newPasswordController,
-                      obscureText: !state.newPasswordVisible,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          state.newPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          viewModel.toggleNewPasswordVisibility();
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // 새 비밀번호 에러 메시지
-                    if (state.newPasswordError != null)
-                      Text(
-                        state.newPasswordError!,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                        ),
-                      ),
-                    const SizedBox(height: 20),
-
-                    // 새 비밀번호 확인 입력 필드
-                    InputField(
-                      label: '새 비밀번호 확인',
-                      hintText: '새 비밀번호를 다시 입력해주세요.',
-                      controller: _confirmPasswordController,
-                      obscureText: !state.confirmPasswordVisible,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          state.confirmPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          viewModel.toggleConfirmPasswordVisibility();
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // 새 비밀번호 확인 에러 메시지
-                    if (state.confirmPasswordError != null)
-                      Text(
-                        state.confirmPasswordError!,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                        ),
-                      ),
-                    const SizedBox(height: 40),
-
-                    // 성공 메시지
-                    if (state.isSuccess)
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.green.withOpacity(0.3)),
-                        ),
-                        child: const Row(
+                    child: IntrinsicHeight(  // IntrinsicHeight 추가
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.check_circle, color: Colors.green, size: 20),
-                            SizedBox(width: 8),
-                            Text(
-                              '비밀번호가 성공적으로 변경되었습니다.',
+                            const SizedBox(height: 20),
+                            const Text(
+                              '보안을 위해 현재 비밀번호와 새 비밀번호를\n입력해주세요.',
                               style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 14,
+                                fontSize: 16,
+                                color: Colors.grey,
+                                height: 1.5,
                               ),
                             ),
+                            const SizedBox(height: 40),
+
+                            // 현재 비밀번호 입력 필드
+                            InputField(
+                              label: '현재 비밀번호',
+                              hintText: '현재 비밀번호를 입력해주세요.',
+                              controller: _currentPasswordController,
+                              obscureText: !state.currentPasswordVisible,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  state.currentPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  viewModel.toggleCurrentPasswordVisibility();
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // 현재 비밀번호 에러 메시지
+                            if (state.currentPasswordError != null)
+                              Text(
+                                state.currentPasswordError!,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            const SizedBox(height: 20),
+
+                            // 새 비밀번호 입력 필드
+                            InputField(
+                              label: '새 비밀번호',
+                              hintText: '새 비밀번호를 입력해주세요.',
+                              controller: _newPasswordController,
+                              obscureText: !state.newPasswordVisible,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  state.newPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  viewModel.toggleNewPasswordVisibility();
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // 새 비밀번호 에러 메시지
+                            if (state.newPasswordError != null)
+                              Text(
+                                state.newPasswordError!,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            const SizedBox(height: 20),
+
+                            // 새 비밀번호 확인 입력 필드
+                            InputField(
+                              label: '새 비밀번호 확인',
+                              hintText: '새 비밀번호를 다시 입력해주세요.',
+                              controller: _confirmPasswordController,
+                              obscureText: !state.confirmPasswordVisible,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  state.confirmPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  viewModel.toggleConfirmPasswordVisibility();
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // 새 비밀번호 확인 에러 메시지
+                            if (state.confirmPasswordError != null)
+                              Text(
+                                state.confirmPasswordError!,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            const SizedBox(height: 40),
+
+                            // 성공 메시지
+                            if (state.isSuccess)
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 20),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.green.withOpacity(0.3)),
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.check_circle, color: Colors.green, size: 20),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      '비밀번호가 성공적으로 변경되었습니다.',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            // Spacer() 제거하고 빈 공간 사용
+                            const Expanded(child: SizedBox()),
+
+                            // 비밀번호 변경 버튼
+                            ClickButton(
+                              buttonText: state.isLoading ? '변경 중...' : '비밀번호 변경',
+                              onPressed: state.isLoading
+                                  ? null
+                                  : () {
+                                viewModel.changePassword(
+                                  onSuccess: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('비밀번호가 성공적으로 변경되었습니다.'),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                    // 성공 후 잠시 대기 후 이전 화면으로 이동
+                                    Future.delayed(const Duration(seconds: 1), () {
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    });
+                                  },
+                                  onError: _showError,
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 20),
                           ],
                         ),
                       ),
-
-                    const Spacer(),
-
-                    // 비밀번호 변경 버튼
-                    ClickButton(
-                      buttonText: state.isLoading ? '변경 중...' : '비밀번호 변경',
-                      onPressed: state.isLoading
-                          ? null
-                          : () {
-                        viewModel.changePassword(
-                          onSuccess: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('비밀번호가 성공적으로 변경되었습니다.'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                            // 성공 후 잠시 대기 후 이전 화면으로 이동
-                            Future.delayed(const Duration(seconds: 1), () {
-                              if (context.mounted) {
-                                Navigator.of(context).pop();
-                              }
-                            });
-                          },
-                          onError: _showError,
-                        );
-                      },
                     ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ),
         );

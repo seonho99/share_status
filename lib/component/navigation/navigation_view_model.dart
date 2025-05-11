@@ -43,4 +43,7 @@ class NavigationViewModel extends ChangeNotifier {
     goBranch(1);
     updateCurrentIndex(1);
   }
+
+  // 프로필 업데이트 플래그 확인
+  bool get shouldRefreshMain => _state.shouldRefreshMain;
 }
