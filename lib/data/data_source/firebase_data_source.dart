@@ -64,4 +64,6 @@ abstract interface class FirebaseDataSource {
 
   Future<Map<String, dynamic>?> getUserStatus(String userId);
 
+  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(List<String> userIds);
+
 }

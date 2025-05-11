@@ -62,4 +62,7 @@ abstract interface class FirebaseRepository {
   });
 
   Future<Map<String, dynamic>?> getUserStatus();
+
+  // 팔로우한 사용자들의 상태 조회 메서드 추가
+  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(List<String> userIds);
 }

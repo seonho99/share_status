@@ -28,12 +28,7 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
       final request = FollowRequest(
@@ -57,15 +52,12 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
-      final requests = await _repository.getReceivedFollowRequests(currentUserId);
+      final requests = await _repository.getReceivedFollowRequests(
+        currentUserId,
+      );
       return Result.success(requests);
     } catch (error, stackTrace) {
       final failure = _mapErrorToFailure(error, stackTrace);
@@ -78,12 +70,7 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
       final requests = await _repository.getSentFollowRequests(currentUserId);
@@ -102,15 +89,14 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
-      await _repository.acceptFollowRequest(requestId, fromUserId, currentUserId);
+      await _repository.acceptFollowRequest(
+        requestId,
+        fromUserId,
+        currentUserId,
+      );
       return const Result.success(null);
     } catch (error, stackTrace) {
       final failure = _mapErrorToFailure(error, stackTrace);
@@ -134,15 +120,13 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
-      final isFollowing = await _repository.isFollowing(currentUserId, toUserId);
+      final isFollowing = await _repository.isFollowing(
+        currentUserId,
+        toUserId,
+      );
       return Result.success(isFollowing);
     } catch (error, stackTrace) {
       final failure = _mapErrorToFailure(error, stackTrace);
@@ -155,12 +139,7 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
       await _repository.unfollow(currentUserId, toUserId);
@@ -176,12 +155,7 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
       final users = await _repository.getFollowingUsers(currentUserId);
@@ -197,12 +171,7 @@ class FollowUseCase {
     try {
       final currentUserId = _repository.currentUserId;
       if (currentUserId == null) {
-        return Result.error(
-          Failure(
-            FailureType.unauthorized,
-            '로그인이 필요합니다.',
-          ),
-        );
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
       }
 
       final users = await _repository.getFollowers(currentUserId);
@@ -238,6 +207,37 @@ class FollowUseCase {
         cause: error,
         stackTrace: stackTrace,
       );
+    }
+  }
+
+  // 팔로우한 사용자들의 상태 조회
+  Future<Result<Map<String, Map<String, dynamic>>>>
+  getFollowingUsersStatus() async {
+    try {
+      final currentUserId = _repository.currentUserId;
+      if (currentUserId == null) {
+        return Result.error(Failure(FailureType.unauthorized, '로그인이 필요합니다.'));
+      }
+
+      // 먼저 팔로우한 사용자 목록을 가져옴
+      final result = await getFollowingUsers();
+
+      switch (result) {
+        case Success<List<UserModel>>():
+          // 사용자 ID 리스트 추출
+          final userIds = result.data.map((user) => user.uid).toList();
+
+          // 각 사용자의 상태 조회
+          final statusMap = await _repository.getFollowingUsersStatus(userIds);
+
+          return Result.success(statusMap);
+
+        case Error<List<UserModel>>():
+          return Result.error(result.failure);
+      }
+    } catch (error, stackTrace) {
+      final failure = _mapErrorToFailure(error, stackTrace);
+      return Result.error(failure);
     }
   }
 }

@@ -139,4 +139,9 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
 
     return _dataSource.getUserStatus(userId);
   }
+
+  @override
+  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(List<String> userIds) async {
+    return _dataSource.getFollowingUsersStatus(userIds);
+  }
 }

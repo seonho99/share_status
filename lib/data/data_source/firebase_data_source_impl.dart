@@ -388,4 +388,39 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       throw Exception('상태 조회 중 오류가 발생했습니다: ${e.toString()}');
     }
   }
+
+  // 팔로우한 사용자들의 상태 조회
+  @override
+  Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(
+    List<String> userIds,
+  ) async {
+    try {
+      final statusMap = <String, Map<String, dynamic>>{};
+
+      if (userIds.isEmpty) return statusMap;
+
+      // 최대 10개씩 쿼리하기 (Firestore의 'whereIn' 제한)
+      final chunks = <List<String>>[];
+      for (var i = 0; i < userIds.length; i += 10) {
+        chunks.add(
+          userIds.sublist(i, i + 10 > userIds.length ? userIds.length : i + 10),
+        );
+      }
+
+      for (final chunk in chunks) {
+        final querySnapshot =
+            await _statuses.where(FieldPath.documentId, whereIn: chunk).get();
+
+        for (final doc in querySnapshot.docs) {
+          if (doc.exists) {
+            statusMap[doc.id] = doc.data();
+          }
+        }
+      }
+
+      return statusMap;
+    } catch (e) {
+      throw Exception('사용자 상태 조회 중 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
 }

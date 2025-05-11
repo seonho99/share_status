@@ -27,6 +27,9 @@ class MainViewModel extends ChangeNotifier {
           isLoading: false,
           errorMessage: null,
         );
+
+        // 사용자 목록 로드 후 각 사용자의 상태도 로드
+        await loadFollowingUsersStatus();
         break;
       case Error():
         _state = _state.copyWith(
@@ -34,6 +37,22 @@ class MainViewModel extends ChangeNotifier {
           isLoading: false,
           errorMessage: result.failure.message,
         );
+        break;
+    }
+    notifyListeners();
+  }
+
+  // 팔로우한 사용자들의 상태 로드
+  Future<void> loadFollowingUsersStatus() async {
+    final result = await _followUseCase.getFollowingUsersStatus();
+
+    switch (result) {
+      case Success():
+        _state = _state.copyWith(followingUsersStatus: result.data);
+        break;
+      case Error():
+      // 상태 로드 실패는 치명적이지 않으므로 로그만 남김
+        print('팔로우 사용자 상태 로드 실패: ${result.failure.message}');
         break;
     }
     notifyListeners();

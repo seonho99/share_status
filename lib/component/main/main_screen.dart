@@ -224,11 +224,18 @@ class _MainScreenState extends State<MainScreen> {
                           itemCount: state.followingUsers.length,
                           itemBuilder: (context, index) {
                             final user = state.followingUsers[index];
+
+                            // 해당 사용자의 상태 정보 가져오기
+                            final userStatus = state.followingUsersStatus[user.uid];
+                            final statusMessage = userStatus?['statusMessage'] ?? '';
+                            final statusTime = userStatus?['statusTime'] ?? '';
+                            final colorStatus = userStatus?['colorStatus'] ?? 0xFFD9D9D9;
+
                             return MainItem(
                               name: user.nickname,
-                              statusTime: '', // 상태 시간은 별도로 구현 필요
-                              statusMessage: '', // 상태 메시지는 별도로 구현 필요
-                              statusColor: Color(0xFFD9D9D9), // 기본 회색
+                              statusTime: statusTime,
+                              statusMessage: statusMessage.isEmpty ? '' : statusMessage,
+                              statusColor: Color(colorStatus),
                             );
                           },
                         ),
