@@ -223,6 +223,7 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
   }
 
   // 팔로우 요청 수락
+  // 팔로우 요청 수락
   @override
   Future<void> acceptFollowRequest(
       String requestId,
@@ -232,15 +233,23 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
     try {
       final batch = FirebaseFirestore.instance.batch();
 
-      // 1. 팔로우 관계 생성
-      final followRef = _follows.doc('${fromUserId}_${toUserId}');
-      batch.set(followRef, {
+      // 1. 팔로우 관계 생성 (요청자 → 수락자)
+      final followRef1 = _follows.doc('${fromUserId}_${toUserId}');
+      batch.set(followRef1, {
         'fromUserId': fromUserId,
         'toUserId': toUserId,
         'createdAt': DateTime.now().toIso8601String(),
       });
 
-      // 2. 팔로우 요청 삭제
+      // 2. 역방향 팔로우 관계 생성 (수락자 → 요청자)
+      final followRef2 = _follows.doc('${toUserId}_${fromUserId}');
+      batch.set(followRef2, {
+        'fromUserId': toUserId,
+        'toUserId': fromUserId,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+
+      // 3. 팔로우 요청 삭제
       final requestRef = _followRequests.doc(requestId);
       batch.delete(requestRef);
 
