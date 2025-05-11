@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
                     child: Icon(Icons.person_add, size: 30),
                   ),
 
-                  SizedBox(width: 10),
+                  SizedBox(width: 16),
                   GestureDetector(
                     onTap: () {
                       context.go('/main/follow');
