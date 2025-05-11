@@ -5,6 +5,7 @@ class MainItem extends StatelessWidget {
   final String statusMessage;
   final String statusTime;
   final Color statusColor;
+  final String? imageUrl; // 이미지 URL 추가
 
   const MainItem({
     super.key,
@@ -12,6 +13,7 @@ class MainItem extends StatelessWidget {
     required this.statusMessage,
     required this.statusTime,
     required this.statusColor,
+    this.imageUrl, // 이미지 URL은 선택적 파라미터
   });
 
   @override
@@ -34,6 +36,38 @@ class MainItem extends StatelessWidget {
                 offset: Offset(0, 4),
               ),
             ],
+          ),
+          child: ClipOval(
+            child: imageUrl != null && imageUrl!.isNotEmpty
+                ? Image.network(
+              imageUrl!,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                    strokeWidth: 2,
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // 이미지 로딩 실패 시 기본 아이콘 표시
+                return Icon(
+                  Icons.person,
+                  size: 30,
+                  color: Colors.grey[400],
+                );
+              },
+            )
+                : Icon(
+              Icons.person,
+              size: 30,
+              color: Colors.grey[400],
+            ),
           ),
         ),
         SizedBox(width: 12),

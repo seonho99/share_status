@@ -60,6 +60,8 @@ class ProfileEditViewModel extends ChangeNotifier {
   // 이미지 선택
   Future<void> pickImage({bool fromCamera = false}) async {
     try {
+      print('이미지 선택 시작: ${fromCamera ? "카메라" : "갤러리"}');
+
       final XFile? image = await _imagePicker.pickImage(
         source: fromCamera ? ImageSource.camera : ImageSource.gallery,
         maxWidth: 1024,
@@ -68,13 +70,21 @@ class ProfileEditViewModel extends ChangeNotifier {
       );
 
       if (image != null) {
+        print('이미지 선택 완료: ${image.path}');
+        final imageFile = File(image.path);
+        final fileSize = await imageFile.length();
+        print('파일 크기: ${(fileSize / (1024 * 1024)).toStringAsFixed(2)}MB');
+
         _state = _state.copyWith(
-          selectedImage: File(image.path),
+          selectedImage: imageFile,
           errorMessage: null,
         );
         notifyListeners();
+      } else {
+        print('이미지 선택 취소됨');
       }
     } catch (e) {
+      print('이미지 선택 오류: $e');
       _state = _state.copyWith(
         errorMessage: '이미지 선택 중 오류가 발생했습니다: ${e.toString()}',
       );
@@ -82,13 +92,19 @@ class ProfileEditViewModel extends ChangeNotifier {
     }
   }
 
-  // 이미지 업로드 (개선된 버전)
+  // 이미지 업로드 (디버깅 정보 추가 버전)
   Future<String?> _uploadImage(File imageFile) async {
     try {
+      print('\n=== 이미지 업로드 시작 ===');
+      print('파일 경로: ${imageFile.path}');
+
       // 파일 크기 확인 (5MB 제한)
       final fileSizeInBytes = await imageFile.length();
       final fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      print('파일 크기: ${fileSizeInMB.toStringAsFixed(2)}MB');
+
       if (fileSizeInMB > 5) {
+        print('⚠️ 파일 크기 초과 (5MB 제한)');
         _state = _state.copyWith(
           errorMessage: '이미지 파일 크기가 5MB를 초과할 수 없습니다.',
         );
@@ -97,18 +113,22 @@ class ProfileEditViewModel extends ChangeNotifier {
       }
 
       // 현재 사용자의 ID를 사용하여 고유한 경로 생성
-      final userId = _profileUseCase._repository.currentUserId;
+      final userId = _profileUseCase.repository.currentUserId;
+      print('사용자 ID: $userId');
+
       if (userId == null) {
+        print('⚠️ 로그인된 사용자 없음');
         throw Exception('로그인된 사용자가 없습니다.');
       }
 
       // 이전 이미지 삭제 (선택사항)
       if (_state.imageUrl.isNotEmpty && _state.imageUrl.contains('profile_images/')) {
+        print('기존 이미지 삭제 시도: ${_state.imageUrl}');
         try {
           await _storage.refFromURL(_state.imageUrl).delete();
+          print('✓ 기존 이미지 삭제 성공');
         } catch (e) {
-          // 이미지 삭제 실패는 무시 (파일이 이미 삭제되었거나 존재하지 않을 수 있음)
-          print('이전 이미지 삭제 실패: $e');
+          print('⚠️ 기존 이미지 삭제 실패: $e');
         }
       }
 
@@ -116,6 +136,7 @@ class ProfileEditViewModel extends ChangeNotifier {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = 'profile_${userId}_$timestamp${path.extension(imageFile.path)}';
       final ref = _storage.ref().child('profile_images/$fileName');
+      print('업로드 경로: profile_images/$fileName');
 
       // 업로드 상태 업데이트
       _state = _state.copyWith(isUploading: true);
@@ -129,11 +150,13 @@ class ProfileEditViewModel extends ChangeNotifier {
           'uploadedAt': DateTime.now().toIso8601String(),
         },
       );
+      print('메타데이터: ${metadata.customMetadata}');
 
       // 업로드 실행
+      print('업로드 시작...');
       final uploadTask = ref.putFile(imageFile, metadata);
 
-      // 업로드 진행률 모니터링 (선택사항)
+      // 업로드 진행률 모니터링
       uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
         final progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         print('업로드 진행률: ${progress.toStringAsFixed(1)}%');
@@ -141,15 +164,22 @@ class ProfileEditViewModel extends ChangeNotifier {
 
       // 업로드 완료 대기
       final snapshot = await uploadTask;
+      print('업로드 완료, 다운로드 URL 가져오는 중...');
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      print('업로드 성공: $downloadUrl');
+      print('✓ 업로드 성공: $downloadUrl');
+      print('=== 이미지 업로드 종료 ===\n');
       return downloadUrl;
     } on FirebaseException catch (e) {
+      print('⚠️ Firebase 예외 발생:');
+      print('  코드: ${e.code}');
+      print('  메시지: ${e.message}');
+      print('  상세: $e');
+
       String errorMessage;
       switch (e.code) {
         case 'storage/unauthorized':
-          errorMessage = '업로드 권한이 없습니다. 관리자에게 문의하세요.';
+          errorMessage = '업로드 권한이 없습니다. Firebase Console에서 Storage 보안 규칙을 확인하세요.';
           break;
         case 'storage/canceled':
           errorMessage = '업로드가 취소되었습니다.';
@@ -171,6 +201,7 @@ class ProfileEditViewModel extends ChangeNotifier {
       notifyListeners();
       return null;
     } catch (e) {
+      print('⚠️ 일반 예외 발생: $e');
       _state = _state.copyWith(
         errorMessage: '이미지 업로드 중 오류가 발생했습니다: ${e.toString()}',
       );
@@ -179,6 +210,7 @@ class ProfileEditViewModel extends ChangeNotifier {
     } finally {
       _state = _state.copyWith(isUploading: false);
       notifyListeners();
+      print('업로드 상태 초기화 완료');
     }
   }
 
@@ -187,7 +219,12 @@ class ProfileEditViewModel extends ChangeNotifier {
     required VoidCallback onSuccess,
     required void Function(String error) onError,
   }) async {
+    print('\n=== 프로필 저장 시작 ===');
+    print('닉네임: ${state.nickname}');
+    print('선택된 이미지: ${state.selectedImage?.path ?? "없음"}');
+
     if (!state.canSave) {
+      print('⚠️ 저장 불가능: ${state.nicknameError ?? "유효성 검사 실패"}');
       onError(state.nicknameError ?? '입력값을 확인해주세요.');
       return;
     }
@@ -197,19 +234,24 @@ class ProfileEditViewModel extends ChangeNotifier {
 
     try {
       String? imageUrl = state.imageUrl;
+      print('기존 이미지 URL: $imageUrl');
 
       // 새로운 이미지가 선택된 경우 업로드
       if (state.selectedImage != null) {
+        print('새로운 이미지 업로드 시작...');
         imageUrl = await _uploadImage(state.selectedImage!);
         if (imageUrl == null) {
+          print('⚠️ 이미지 업로드 실패');
           _state = _state.copyWith(isLoading: false);
           notifyListeners();
           onError('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
           return;
         }
+        print('✓ 새로운 이미지 URL: $imageUrl');
       }
 
       // 프로필 업데이트
+      print('프로필 업데이트 시작...');
       final result = await _profileUseCase.updateUserProfile(
         nickname: state.nickname,
         imageUrl: imageUrl!,
@@ -217,6 +259,7 @@ class ProfileEditViewModel extends ChangeNotifier {
 
       switch (result) {
         case Success():
+          print('✓ 프로필 업데이트 성공');
           _state = _state.copyWith(
             isLoading: false,
             imageUrl: imageUrl,
@@ -226,6 +269,7 @@ class ProfileEditViewModel extends ChangeNotifier {
           onSuccess();
           break;
         case Error():
+          print('⚠️ 프로필 업데이트 실패: ${result.failure.message}');
           _state = _state.copyWith(
             isLoading: false,
             errorMessage: result.failure.message,
@@ -235,6 +279,7 @@ class ProfileEditViewModel extends ChangeNotifier {
           break;
       }
     } catch (e) {
+      print('⚠️ 프로필 저장 중 예외 발생: $e');
       _state = _state.copyWith(
         isLoading: false,
         errorMessage: '프로필 업데이트 중 오류가 발생했습니다: ${e.toString()}',
@@ -242,6 +287,7 @@ class ProfileEditViewModel extends ChangeNotifier {
       notifyListeners();
       onError(_state.errorMessage!);
     }
+    print('=== 프로필 저장 종료 ===\n');
   }
 
   // 상태 초기화

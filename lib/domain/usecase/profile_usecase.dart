@@ -7,6 +7,9 @@ class ProfileUseCase {
 
   ProfileUseCase(this._repository);
 
+  // Repository getter 추가
+  FirebaseRepository get repository => _repository;
+
   // 현재 사용자 프로필 조회
   Future<Result<UserModel>> getCurrentUserProfile() async {
     try {

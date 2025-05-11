@@ -10,7 +10,7 @@ import '../../domain/usecase/profile_usecase.dart';
 import '../bottom_sheet/bottom_sheet_screen.dart';
 import '../bottom_sheet/bottom_sheet_view_model.dart';
 import '../widget/main_item.dart';
-import '../navigation/navigation_view_model.dart'; // 추가
+import '../navigation/navigation_view_model.dart';
 import 'main_view_model.dart';
 
 class MainScreen extends StatefulWidget {
@@ -24,7 +24,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   String _statusMessage = '';
   String _statusTime = '';
   Color _statusColor = Color(0xFFD9D9D9);
-  String _myNickname = '나의 상태'; // 닉네임 상태 추가
+  String _myNickname = '나의 상태';
+  String _myImageUrl = ''; // 내 프로필 이미지 URL 추가
 
   @override
   void initState() {
@@ -81,7 +82,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
     _loadFollowingUsers();
     _loadUserStatus();
-    _loadUserProfile(); // 닉네임 로드
+    _loadUserProfile();
   }
 
   void _loadFollowingUsers() {
@@ -124,7 +125,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     }
   }
 
-  // 사용자 프로필(닉네임) 로드
+  // 사용자 프로필(닉네임, 이미지) 로드
   void _loadUserProfile() async {
     if (!mounted) return;
 
@@ -143,6 +144,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           if (mounted) {
             setState(() {
               _myNickname = result.data.nickname;
+              _myImageUrl = result.data.imageUrl; // 이미지 URL 저장
             });
           }
         });
@@ -265,6 +267,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                       statusTime: _statusTime,
                       statusMessage: _statusMessage.isEmpty ? '상태를 설정해보세요' : _statusMessage,
                       statusColor: _statusColor,
+                      imageUrl: _myImageUrl, // 내 프로필 이미지 전달
                     ),
                   ),
                 ),
@@ -354,6 +357,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                             statusTime: statusTime,
                             statusMessage: statusMessage.isEmpty ? '' : statusMessage,
                             statusColor: Color(colorStatus),
+                            imageUrl: user.imageUrl, // 사용자 프로필 이미지 전달
                           );
                         },
                       ),
