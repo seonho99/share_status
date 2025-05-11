@@ -221,6 +221,35 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       throw Exception('보낸 팔로우 요청 조회 중 오류가 발생했습니다: ${e.toString()}');
     }
   }
+
+  // 팔로우 요청 수락
+  @override
+  Future<void> acceptFollowRequest(
+      String requestId,
+      String fromUserId,
+      String toUserId,
+      ) async {
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+
+      // 1. 팔로우 관계 생성
+      final followRef = _follows.doc('${fromUserId}_${toUserId}');
+      batch.set(followRef, {
+        'fromUserId': fromUserId,
+        'toUserId': toUserId,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+
+      // 2. 팔로우 요청 삭제
+      final requestRef = _followRequests.doc(requestId);
+      batch.delete(requestRef);
+
+      await batch.commit();
+    } catch (e) {
+      throw Exception('팔로우 요청 수락 중 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
+
   // 팔로우 요청 거절
   @override
   Future<void> rejectFollowRequest(String requestId) async {
