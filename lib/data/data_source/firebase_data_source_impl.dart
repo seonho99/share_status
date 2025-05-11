@@ -451,7 +451,6 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
     }
   }
 
-  // 비밀번호 변경 메서드 추가
   @override
   Future<void> changePassword({
     required String currentPassword,
@@ -463,8 +462,8 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
         throw Exception('로그인된 사용자가 없습니다.');
       }
 
-      // 재인증 확인
-      final credential = EmailAuthCredential(
+      // 재인증용 credential 생성
+      final credential = EmailAuthProvider.credential(
         email: user.email!,
         password: currentPassword,
       );
