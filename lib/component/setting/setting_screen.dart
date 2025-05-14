@@ -72,7 +72,13 @@ class SettingScreen extends StatelessWidget {
                         const Divider(height: 1, thickness: 0.3),
                         _buildSettingsItem('공지 사항', context),
                         const Divider(height: 1, thickness: 0.3),
-                        _buildSettingsItem('서비스 이용 약관', context),
+                        _buildSettingsItem(
+                          '서비스 이용 약관',
+                          context,
+                          onTap: () {
+                            context.push('/settings/${Routes.terms}');
+                          },
+                        ),
                         const Divider(height: 1, thickness: 0.3),
 
                         // 로그아웃 버튼 추가
@@ -111,15 +117,15 @@ class SettingScreen extends StatelessWidget {
   }
 
   Widget _buildSettingsItem(
-      String title,
-      BuildContext context, {
-        VoidCallback? onTap,
-        Color textColor = Colors.black,
-      }) {
+    String title,
+    BuildContext context, {
+    VoidCallback? onTap,
+    Color textColor = Colors.black,
+  }) {
     return InkWell(
       onTap:
-      onTap ??
-              () {
+          onTap ??
+          () {
             // 기본 동작: 스낵바 표시
             ScaffoldMessenger.of(
               context,
@@ -154,37 +160,44 @@ class SettingScreen extends StatelessWidget {
   }
 
   // 로그아웃 확인 다이얼로그
-  void _showLogoutConfirmDialog(BuildContext context, SettingViewModel viewModel) {
+  void _showLogoutConfirmDialog(
+    BuildContext context,
+    SettingViewModel viewModel,
+  ) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: const Text('로그아웃'),
-        content: const Text('정말 로그아웃 하시겠습니까?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('취소'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: Colors.white,
+            title: const Text('로그아웃'),
+            content: const Text('정말 로그아웃 하시겠습니까?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('취소'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
 
-              viewModel.signOut(
-                onSuccess: () {
-                  context.go(Routes.signIn);
-                },
-                onError: (error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(error)),
+                  viewModel.signOut(
+                    onSuccess: () {
+                      context.go(Routes.signIn);
+                    },
+                    onError: (error) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(error)));
+                    },
                   );
                 },
-              );
-            },
-            child: const Text('로그아웃', style: TextStyle(color: Colors.red)),
+                child: const Text(
+                  '로그아웃',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }
