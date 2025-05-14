@@ -76,11 +76,9 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   }
 
   @override
-  Future<void> acceptFollowRequest(
-    String requestId,
-    String fromUserId,
-    String toUserId,
-  ) {
+  Future<void> acceptFollowRequest(String requestId,
+      String fromUserId,
+      String toUserId,) {
     return _dataSource.acceptFollowRequest(requestId, fromUserId, toUserId);
   }
 
@@ -142,8 +140,7 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
 
   @override
   Future<Map<String, Map<String, dynamic>>> getFollowingUsersStatus(
-    List<String> userIds,
-  ) async {
+      List<String> userIds,) async {
     return _dataSource.getFollowingUsersStatus(userIds);
   }
 
@@ -180,5 +177,10 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
       currentPassword: currentPassword,
       newPassword: newPassword,
     );
+  }
+
+  @override
+  Future<void> deleteAccount({required String password}) async {
+    return _dataSource.deleteAccount(password: password);
   }
 }
