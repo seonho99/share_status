@@ -158,6 +158,7 @@ class SettingScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
         title: const Text('로그아웃'),
         content: const Text('정말 로그아웃 하시겠습니까?'),
         actions: [
