@@ -20,9 +20,16 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
   @override
   Future<bool> checkIdExists(String id) async {
-    final querySnapshot = await _users.where('id', isEqualTo: id).get();
-
-    return querySnapshot.docs.isEmpty;
+    try {
+      print('ID 중복 확인 시작: $id');
+      final querySnapshot = await _users.where('id', isEqualTo: id).get();
+      final isEmpty = querySnapshot.docs.isEmpty;
+      print('ID 중복 확인 결과 - 사용 가능: $isEmpty (문서 수: ${querySnapshot.docs.length})');
+      return isEmpty;
+    } catch (e) {
+      print('ID 중복 확인 중 오류 발생: $e');
+      throw Exception('ID 중복 확인 중 오류가 발생했습니다: $e');
+    }
   }
 
   @override
