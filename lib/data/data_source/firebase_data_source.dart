@@ -86,4 +86,7 @@ abstract interface class FirebaseDataSource {
     required String currentPassword,
     required String newPassword,
   });
+
+  // 회원 탈퇴 메서드 추가
+  Future<void> deleteAccount({required String password});
 }

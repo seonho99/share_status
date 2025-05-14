@@ -497,4 +497,52 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       throw Exception('비밀번호 변경 중 알 수 없는 오류가 발생했습니다: ${e.toString()}');
     }
   }
+
+  @override
+  Future<void> deleteAccount({required String password}) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null || user.email == null) {
+        throw Exception('로그인된 사용자가 없습니다.');
+      }
+
+      // 사용자 재인증
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+      await user.reauthenticateWithCredential(credential);
+
+      // 사용자 데이터 삭제
+      final userId = user.uid;
+
+      // Firestore에서 사용자 관련 데이터 삭제 (트랜잭션으로 처리)
+      final batch = FirebaseFirestore.instance.batch();
+
+      // 사용자 정보 삭제
+      batch.delete(_users.doc(userId));
+
+      // 사용자 상태 삭제
+      batch.delete(_statuses.doc(userId));
+
+      // 배치 실행
+      await batch.commit();
+
+      // 사용자 계정 삭제
+      await user.delete();
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'wrong-password':
+          throw Exception('비밀번호가 올바르지 않습니다.');
+        case 'invalid-credential':
+          throw Exception('인증 정보가 유효하지 않습니다.');
+        case 'requires-recent-login':
+          throw Exception('보안을 위해 다시 로그인 후 시도해주세요.');
+        default:
+          throw Exception('계정 삭제 중 오류가 발생했습니다: ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('계정 삭제 중 알 수 없는 오류가 발생했습니다: ${e.toString()}');
+    }
+  }
 }
