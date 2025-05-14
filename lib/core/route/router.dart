@@ -13,6 +13,7 @@ import '../../component/profile_edit/profile_edit_screen.dart';
 import '../../component/navigation/navigation_widget.dart';
 import '../../component/setting/setting_screen.dart';
 import '../../component/splash/splash_screen.dart';
+import '../../component/terms/terms_screen.dart';
 import 'routes.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -90,6 +91,12 @@ final router = GoRouter(
                   path: Routes.passwordChange,
                   builder: (context, state) {
                     return PasswordChangeScreen();
+                  },
+                ),
+                GoRoute(
+                  path: Routes.terms,
+                  builder: (context, state) {
+                    return TermsScreen();
                   },
                 ),
               ],

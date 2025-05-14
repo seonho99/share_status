@@ -9,4 +9,7 @@ abstract class Routes {
   static const String passwordChange = 'password_change';
   static const String follow = 'follow';
   static const String followRequest = 'follow_request';
+
+  // 추가: 서비스 이용약관 경로
+  static const String terms = 'terms';
 }

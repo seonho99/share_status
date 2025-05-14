@@ -12,8 +12,10 @@ import 'component/navigation/navigation_view_model.dart';
 import 'component/password_change/password_change_view_model.dart';
 import 'component/profile_edit/profile_edit_view_model.dart';
 import 'component/setting/setting_view_model.dart';
+import 'component/terms/terms_view_model.dart';
 import 'data/data_source/firebase_data_source_impl.dart';
 import 'data/repository/firebase_repository_impl.dart';
+import 'domain/usecase/delete_account_use_case.dart';
 import 'domain/usecase/password_change_use_case.dart';
 import 'domain/usecase/profile_usecase.dart';
 import 'domain/usecase/sign_out_usecase.dart';
@@ -78,6 +80,10 @@ void main() async {
         Provider(create: (_) => SignOutUseCase(repository)),
         ChangeNotifierProvider(
           create: (_) => SettingViewModel(SignOutUseCase(repository)),
+        ),
+        Provider(create: (_) => DeleteAccountUseCase(repository)),
+        ChangeNotifierProvider(
+          create: (_) => TermsViewModel(DeleteAccountUseCase(repository)),
         ),
       ],
       child: const MyApp(),
